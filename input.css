@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@source "./src/**/*.rs";
+
+@theme {
+  /* Dark mode palette — inverted from opencode.ai cream/ink */
+  --color-canvas: #0f0f0f;
+  --color-ink: #f5f0f0;
+  --color-ink-deep: #ffffff;
+  --color-charcoal: #d0d0d0;
+  --color-body: #b0b0b0;
+  --color-mute: #808080;
+  --color-stone: #6e6e73;
+  --color-ash: #505050;
+  --color-surface-soft: #1a1a1a;
+  --color-surface-card: #222222;
+  --color-surface-dark: #080808;
+  --color-surface-dark-elevated: #181818;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-strong: rgba(255, 255, 255, 0.2);
+  --color-on-dark: #f5f0f0;
+  --color-on-dark-mute: #707070;
+  --color-accent: #0a84ff;
+  --color-success: #30d158;
+  --color-danger: #ff453a;
+
+  /* Single monospaced font family across all roles */
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    color-scheme: dark;
+  }
+  body {
+    font-family: var(--font-mono);
+    line-height: 1.5;
+    color: var(--color-ink);
+    background-color: var(--color-canvas);
+    overflow-x: hidden;
+  }
+  ::selection {
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
+  }
+}
+
+/* Scroll-reveal animation (gated by prefers-reduced-motion via JS) */
+@keyframes revealUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: revealUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,26 @@
+name: fazuh-site
+
+services:
+  app:
+    image: ghcr.io/fazuh/fazuh-site:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      - SMTP_HOST=${SMTP_HOST:-mail.fazuh.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USERNAME=${SMTP_USERNAME:-site@fazuh.com}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_FROM=${SMTP_FROM:-FAZuH Site <site@fazuh.com>}
+      - SMTP_TO=${SMTP_TO:-mail@fazuh.com}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEFAULT_LOG_DIR=${DEFAULT_LOG_DIR:-./logs}
+      - LOG_FILENAME=${LOG_FILENAME:-app.log}
+    restart: unless-stopped
+    volumes:
+      - app-logs:/app/logs
+
+volumes:
+  app-logs:

@@ -1,0 +1,23 @@
+name: Auto-promote main -> release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
+      - uses: mtanzi/action-automerge@v1
+        with:
+          source: main
+          target: release
+          github_token: ${{ secrets.PRIVATE_TOKEN }}

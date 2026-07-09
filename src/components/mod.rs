@@ -1,0 +1,19 @@
+pub mod about;
+pub mod collapsible;
+pub mod contact;
+pub mod footer;
+pub mod head;
+pub mod header;
+pub mod hero;
+pub mod projects;
+pub mod skills;
+
+pub use about::About;
+pub use collapsible::Collapsible;
+pub use contact::Contact;
+pub use footer::Footer;
+pub use head::Head;
+pub use header::Header;
+pub use hero::Hero;
+pub use projects::Projects;
+pub use skills::Skills;
