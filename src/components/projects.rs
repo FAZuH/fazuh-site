@@ -42,12 +42,12 @@ const NOTABLE: &[Project] = &[
     },
     Project {
         name: "arthaenergi.id",
-        desc: "Landing page for PT. Mandala Artha Energi (Dioxus)",
+        desc: "Landing page (Dioxus) and mail server (Mailcow) for PT. Mandala Artha Energi",
         link: "https://arthaenergi.id",
     },
     Project {
         name: "krosanevasi.com",
-        desc: "Landing page for PT. Kros Anevasi (Dioxus)",
+        desc: "Landing page (Dioxus) and mail server (Mailcow) for PT. Kros Anevasi ",
         link: "https://krosanevasi.com",
     },
 ];
@@ -105,12 +105,12 @@ pub fn Projects() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6",
                 h2 {
-                    class: "text-base font-bold text-ink mb-2",
-                    "[+] projects"
+                    class: "text-xl font-bold text-ink mb-2",
+                    "Projects"
                 }
                 p {
                     class: "text-sm text-mute mb-8 max-w-[65ch]",
-                    "Selected projects"
+                    "Selected projects."
                 }
 
                 div {

@@ -162,8 +162,8 @@ pub fn Skills() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6",
                 h2 {
-                    class: "text-base font-bold text-ink mb-2",
-                    "[+] skills"
+                    class: "text-xl font-bold text-ink mb-2",
+                    "Skills"
                 }
                 p {
                     class: "text-sm text-mute mb-8 max-w-[65ch]",

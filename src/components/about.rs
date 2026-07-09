@@ -9,8 +9,8 @@ pub fn About() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6",
                 h2 {
-                    class: "text-base font-bold text-ink mb-6",
-                    "[+] about"
+                    class: "text-xl font-bold text-ink mb-6",
+                    "About"
                 }
                 div {
                     class: "border-t border-hairline",

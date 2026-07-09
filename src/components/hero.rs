@@ -25,7 +25,15 @@ pub fn Hero() -> Element {
                         }
                         p {
                             class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
-                            "Software Developer · Infrastructure Engineer · Statistics Student"
+                            "Software Developer"
+                        }
+                        p {
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            "Infrastructure Engineer"
+                        }
+                        p {
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            "Statistics Student"
                         }
                     }
                     div {
@@ -48,7 +56,12 @@ pub fn Hero() -> Element {
                     class: "bg-surface-dark text-on-dark p-8 md:p-10 font-mono leading-[1.4] text-xs md:text-sm",
                     div {
                         class: "mb-6",
-                        div { class: "whitespace-pre", {WORDMARK} }
+                        div {
+                            class: "whitespace-pre",
+                            "┏┓┏┓┏┓  ┓┏
+┣ ┣┫┏┛┓┏┣┫
+┻ ┛┗┗┛┗┻┛┗"
+                        }
                     }
                     div {
                         class: "border-t border-on-dark-mute/20 pt-4 flex flex-col gap-1.5",
@@ -81,9 +94,3 @@ fn StatLine(label: &'static str, value: &'static str) -> Element {
         }
     }
 }
-
-const WORDMARK: &str = r#"
-┏┓┏┓┏┓  ┓┏
-┣ ┣┫┏┛┓┏┣┫
-┻ ┛┗┗┛┗┻┛┗
-"#;

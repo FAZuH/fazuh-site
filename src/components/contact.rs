@@ -57,12 +57,12 @@ pub fn Contact() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6",
                 h2 {
-                    class: "text-base font-bold text-ink mb-2",
-                    "[+] contact"
+                    class: "text-xl font-bold text-ink mb-2",
+                    "Contact"
                 }
                 p {
                     class: "text-sm text-mute mb-8 max-w-[65ch]",
-                    "Send a message to me."
+                    "Send me a message."
                 }
 
                 div {
@@ -85,21 +85,21 @@ pub fn Contact() -> Element {
                         onsubmit: on_submit,
                         class: "flex flex-col gap-5",
                         FieldInput {
-                            label: "name",
+                            label: "Name",
                             input_type: "text",
                             placeholder: "Your name",
                             value: name(),
                             oninput: move |evt: FormEvent| name.set(evt.value()),
                         }
                         FieldInput {
-                            label: "email",
+                            label: "Email",
                             input_type: "email",
                             placeholder: "you@example.com",
                             value: email(),
                             oninput: move |evt: FormEvent| email.set(evt.value()),
                         }
                         FieldTextarea {
-                            label: "message",
+                            label: "Message",
                             placeholder: "Your message",
                             value: message(),
                             oninput: move |evt: FormEvent| message.set(evt.value()),
