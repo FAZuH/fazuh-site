@@ -31,10 +31,14 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
         .parse()
         .map_err(|e| format!("Invalid SMTP_TO address: {e}"))?;
 
+    let reply_to = format!("{} <{}>", form.name, form.email)
+        .parse()
+        .map_err(|e| format!("Invalid reply-to address: {e}"))?;
+
     let email = Message::builder()
         .from(from)
         .to(to)
-        .reply_to(format!("{} <{}>", form.name, form.email).parse().unwrap())
+        .reply_to(reply_to)
         .subject(format!("[fazuh-site] Message from {}", form.name))
         .header(lettre::message::header::ContentType::TEXT_PLAIN)
         .body(format!(
