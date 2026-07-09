@@ -183,10 +183,17 @@ jobs:
             echo "  $PKG: $MEMVER ✓"
           done
 
-      - name: Upload patched Cargo.tomls
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Regenerate Cargo.lock
+        run: cargo generate-lockfile
+
+      - name: Upload patched manifests
         uses: actions/upload-artifact@v4
         with:
           name: patched-cargo-toml
           path: |
             Cargo.toml
+            Cargo.lock
             crates/**/Cargo.toml

@@ -171,7 +171,7 @@ jobs:
 
       - name: Stage patched files
         run: |
-          git add Cargo.toml
+          git add Cargo.toml Cargo.lock
           git add crates/*/Cargo.toml 2>/dev/null || true
 
       - name: Install changelog dependencies
