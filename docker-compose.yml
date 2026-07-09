@@ -9,7 +9,7 @@ services:
       - SMTP_HOST=${SMTP_HOST:-mail.fazuh.com}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USERNAME=${SMTP_USERNAME:-site@fazuh.com}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:?SMTP_PASSWORD is required}
       - SMTP_FROM=${SMTP_FROM:-FAZuH Site <site@fazuh.com>}
       - SMTP_TO=${SMTP_TO:-mail@fazuh.com}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
