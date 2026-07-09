@@ -20,13 +20,22 @@ static CONTACT_LIMITS: LazyLock<Mutex<HashMap<String, RateLimitEntry>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
 
 #[cfg(feature = "server")]
+static CLEANUP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+#[cfg(feature = "server")]
 /// Check if the given key is within the contact form rate limit.
 /// Allows 5 requests per 5 minutes.
 pub fn check_contact_rate_limit(key: &str) -> bool {
-    let mut limits = CONTACT_LIMITS.lock().unwrap();
+    let mut limits = CONTACT_LIMITS.lock().unwrap_or_else(|e| e.into_inner());
     let now = Instant::now();
     let window = Duration::from_secs(300);
     let max_requests = 5u32;
+
+    // Periodic cleanup: sweep entries older than one window every ~64 calls
+    let count = CLEANUP_COUNTER.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    if count.is_multiple_of(64) {
+        limits.retain(|_, entry| now.duration_since(entry.window_start) <= window);
+    }
 
     match limits.get_mut(key) {
         Some(entry) => {
