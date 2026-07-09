@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 use crate::server::ContactResponse;
 use crate::server::submit_contact;
-use crate::utils::validation::ContactForm;
+use crate::validation::ContactForm;
 
 #[component]
 pub fn Contact() -> Element {

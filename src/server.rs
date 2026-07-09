@@ -7,12 +7,12 @@ use serde::Deserialize;
 use serde::Serialize;
 
 #[cfg(feature = "server")]
-use crate::utils::rate_limit;
+use crate::rate_limit;
 #[cfg(feature = "server")]
-use crate::utils::smtp;
+use crate::smtp;
 #[cfg(feature = "server")]
-use crate::utils::validation;
-use crate::utils::validation::ContactForm;
+use crate::validation;
+use crate::validation::ContactForm;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Default)]
 pub struct ContactResponse {
