@@ -1,100 +1,53 @@
+use std::sync::LazyLock;
+
 use dioxus::prelude::*;
 
 use crate::components::Collapsible;
 
 #[derive(PartialEq)]
 struct Project {
-    name: &'static str,
-    desc: &'static str,
-    link: &'static str,
+    name: String,
+    desc: String,
+    link: String,
 }
 
-const NOTABLE: &[Project] = &[
-    Project {
-        name: "pwr-bot",
-        desc: "Discord bot \u{2014} anime & manga tracking, voice call stats",
-        link: "https://github.com/FAZuH/pwr-bot",
-    },
-    Project {
-        name: "tomo",
-        desc: "TUI-based Pomodoro timer",
-        link: "https://github.com/FAZuH/tomo",
-    },
-    Project {
-        name: "lab-ops",
-        desc: "Utility tools for my homelab",
-        link: "https://github.com/FAZuH/lab-ops",
-    },
-    Project {
-        name: "notes.fazuh.com",
-        desc: "My Obsidian notes built with Quartz",
-        link: "https://notes.fazuh.com",
-    },
-    Project {
-        name: "mail.fazuh.com",
-        desc: "Mail server for @fazuh.com emails (Mailcow)",
-        link: "https://mail.fazuh.com",
-    },
-    Project {
-        name: "warlock",
-        desc: "UI course registration & schedule tracking bot (SIAKNG)",
-        link: "https://github.com/FAZuH/warlock",
-    },
-    Project {
-        name: "arthaenergi.id",
-        desc: "Landing page (Dioxus) and mail server (Mailcow) for PT. Mandala Artha Energi",
-        link: "https://arthaenergi.id",
-    },
-    Project {
-        name: "krosanevasi.com",
-        desc: "Landing page (Dioxus) and mail server (Mailcow) for PT. Kros Anevasi ",
-        link: "https://krosanevasi.com",
-    },
-];
+macro_rules! proj {
+    ($name:expr, $desc:expr, $link:expr) => {
+        Project {
+            name: $name.into(),
+            desc: $name.into(),
+            link: $name.into(),
+        }
+    };
+}
 
-const SMALLER: &[Project] = &[
-    Project {
-        name: "design-patterns-rust",
-        desc: "Learn software design patterns in Rust",
-        link: "https://github.com/FAZuH/design-patterns-rust",
-    },
-    Project {
-        name: "contribution-grid",
-        desc: "Rust crate \u{2014} GitHub-style contribution heatmap generation",
-        link: "https://crates.io/crates/contribution-grid",
-    },
-    Project {
-        name: "elm-architecture",
-        desc: "PoC of The Elm Architecture across different UI backends in Rust",
-        link: "https://github.com/FAZuH/elm-architecture",
-    },
-    Project {
-        name: "symlist",
-        desc: "Simple CLI to manage and sync a list of symbolic links",
-        link: "https://github.com/FAZuH/symlist",
-    },
-    Project {
-        name: "hyper-clear",
-        desc: "CLI tool to control window transparency & blur on Hyprland",
-        link: "https://github.com/FAZuH/hyper-clear",
-    },
-    Project {
-        name: "ratatui-toaster",
-        desc: "Fork of ratatui-toaster \u{2014} added toast deduplication and stacking",
-        link: "https://crates.io/crates/ratatui-toaster",
-    },
-    Project {
-        name: "vigilance",
-        desc: "Watch and notify usage of disk, memory, battery, wifi",
-        link: "https://github.com/FAZuH/vigilance",
-    },
-];
+#[rustfmt::skip]
+static NOTABLE: LazyLock<Vec<Project>> = LazyLock::new(|| vec![
+    proj!("pwr-bot", "Discord bot \u{2014} anime & manga tracking, voice call stats", "https://github.com/FAZuH/pwr-bot"),
+    proj!("notes.fazuh.com", "My Obsidian notes built with Quartz", "https://notes.fazuh.com"),
+    proj!("mail.fazuh.com", "Mail server for @fazuh.com emails (Mailcow)", "https://mail.fazuh.com"),
+    proj!("tomo", "TUI-based Pomodoro timer", "https://github.com/FAZuH/tomo"),
+    proj!("lab-ops", "Utility tools for my homelab", "https://github.com/FAZuH/lab-ops"),
+    proj!("arthaenergi.id", "Landing page (Dioxus) and mail server (Mailcow) for PT. Mandala Artha Energi", "https://arthaenergi.id"),
+    proj!("krosanevasi.com", "Landing page (Dioxus) and mail server (Mailcow) for PT. Kros Anevasi", "https://krosanevasi.com"),
+]);
 
-const COURSE_WORK: &[Project] = &[Project {
-    name: "Perbankan",
-    desc: "Banking app",
-    link: "https://github.com/FAZuH/Perbankan",
-}];
+#[rustfmt::skip]
+static SMALLER: LazyLock<Vec<Project>> = LazyLock::new(|| vec![
+    proj!("design-patterns-rust", "Learn software design patterns in Rust", "https://github.com/FAZuH/design-patterns-rust"),
+    proj!("warlock", "UI course registration & schedule tracking bot (SIAKNG)", "https://github.com/FAZuH/warlock"),
+    proj!("contribution-grid", "Rust crate \u{2014} GitHub-style contribution heatmap generation", "https://crates.io/crates/contribution-grid"),
+    proj!("elm-architecture", "PoC of The Elm Architecture across different UI backends in Rust", "https://github.com/FAZuH/elm-architecture"),
+    proj!("symlist", "Simple CLI to manage and sync a list of symbolic links", "https://github.com/FAZuH/symlist"),
+    proj!("hyper-clear", "CLI tool to control window transparency & blur on Hyprland", "https://github.com/FAZuH/hyper-clear"),
+    proj!("ratatui-toaster", "Fork of ratatui-toaster \u{2014} added toast deduplication and stacking", "https://crates.io/crates/ratatui-toaster"),
+    proj!("vigilance", "Watch and notify usage of disk, memory, battery, wifi", "https://github.com/FAZuH/vigilance"),
+]);
+
+#[rustfmt::skip]
+static COURSE_WORK: LazyLock<Vec<Project>> = LazyLock::new(|| vec![
+    proj!("Perbankan", "Banking app", "https://github.com/FAZuH/Perbankan"),
+]);
 
 #[component]
 pub fn Projects() -> Element {
@@ -164,7 +117,7 @@ fn ProjectRow(project: &'static Project, is_last: bool, indent: bool) -> Element
 
     rsx! {
         a {
-            href: project.link,
+            href: &project.link,
             target: if project.link.starts_with("http") { "_blank" } else { "_self" },
             rel: if project.link.starts_with("http") { "noopener noreferrer" } else { "" },
             class: "flex items-baseline gap-3 py-1.5 hover:bg-surface-soft transition-colors rounded-sm \
