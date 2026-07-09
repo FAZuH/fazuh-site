@@ -11,6 +11,10 @@ use lettre::message::Mailbox;
 #[cfg(feature = "server")]
 use lettre::transport::smtp::authentication::Credentials;
 #[cfg(feature = "server")]
+use lettre::transport::smtp::client::Tls;
+#[cfg(feature = "server")]
+use lettre::transport::smtp::client::TlsParameters;
+#[cfg(feature = "server")]
 use tracing::error;
 
 #[cfg(feature = "server")]
@@ -31,10 +35,14 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
         .parse()
         .map_err(|e| format!("Invalid SMTP_TO address: {e}"))?;
 
+    let reply_to = format!("{} <{}>", form.name, form.email)
+        .parse()
+        .map_err(|e| format!("Invalid reply-to address: {e}"))?;
+
     let email = Message::builder()
         .from(from)
         .to(to)
-        .reply_to(format!("{} <{}>", form.name, form.email).parse().unwrap())
+        .reply_to(reply_to)
         .subject(format!("[fazuh-site] Message from {}", form.name))
         .header(lettre::message::header::ContentType::TEXT_PLAIN)
         .body(format!(
@@ -45,20 +53,44 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
         ))
         .map_err(|e| format!("Failed to build email: {e}"))?;
 
-    let transport = if config.smtp_password.is_empty() {
-        AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&config.smtp_host)
-            .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
-            .port(config.smtp_port)
+    let transport = if config.smtp_security == crate::config::SmtpSecurity::Tls {
+        let tls_params = TlsParameters::builder(config.smtp_host.clone())
             .build()
+            .map_err(|e| format!("Failed to build TLS parameters: {e}"))?;
+
+        if config.smtp_password.is_empty() {
+            AsyncSmtpTransport::<Tokio1Executor>::relay(&config.smtp_host)
+                .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
+                .port(config.smtp_port)
+                .tls(Tls::Wrapper(tls_params))
+                .build()
+        } else {
+            AsyncSmtpTransport::<Tokio1Executor>::relay(&config.smtp_host)
+                .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
+                .port(config.smtp_port)
+                .tls(Tls::Wrapper(tls_params))
+                .credentials(Credentials::new(
+                    config.smtp_username.clone(),
+                    config.smtp_password.clone(),
+                ))
+                .build()
+        }
     } else {
-        AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&config.smtp_host)
-            .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
-            .port(config.smtp_port)
-            .credentials(Credentials::new(
-                config.smtp_username.clone(),
-                config.smtp_password.clone(),
-            ))
-            .build()
+        if config.smtp_password.is_empty() {
+            AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&config.smtp_host)
+                .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
+                .port(config.smtp_port)
+                .build()
+        } else {
+            AsyncSmtpTransport::<Tokio1Executor>::starttls_relay(&config.smtp_host)
+                .map_err(|e| format!("Failed to configure SMTP relay: {e}"))?
+                .port(config.smtp_port)
+                .credentials(Credentials::new(
+                    config.smtp_username.clone(),
+                    config.smtp_password.clone(),
+                ))
+                .build()
+        }
     };
 
     match transport.send(email).await {
