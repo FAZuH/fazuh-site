@@ -26,7 +26,9 @@ WORKDIR /app
 
 # Cache build dependencies
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir -p src/components src/utils src/bin && \
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+    mkdir -p src/components src/utils src/bin && \
     echo "fn main() {}" > src/main.rs && \
     echo "" > src/app.rs && \
     echo "" > src/server.rs && \
@@ -45,7 +47,9 @@ COPY assets/ ./assets/
 COPY input.css ./
 
 # Build app
-RUN tailwindcss -i input.css -o assets/tailwind.css && \
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+    tailwindcss -i input.css -o assets/tailwind.css && \
     dx build --release
 
 # Runtime stage
