@@ -1,14 +1,6 @@
 # fazuh-site
 
-Personal portfolio — Dioxus 0.7 fullstack, Tailwind CSS v4, JetBrains Mono, SMTP.
-
-## Sections
-
-- Hero (avatar + Tmplr ASCII wordmark + neofetch-style stats)
-- About (3 bracket bullets + GitHub link + email)
-- Skills (filesystem tree with shields.io badges)
-- Projects (expandable tree: notable, smaller-projects, course-work)
-- Contact (name + email + message → SMTP via lettre)
+Personal portfolio site — built with Dioxus 0.7 fullstack, Tailwind CSS v4.
 
 ## Development
 
@@ -34,15 +26,13 @@ tailwindcss -i input.css -o assets/tailwind.css
 dx serve
 ```
 
-### Refresh container count
+### Refresh live stats
+
+SSHs into lab nodes to count containers, and runs a local `find` for docker-compose stacks. Writes the result directly to `src/container_count.rs`.
 
 ```bash
-cargo run --bin fetch_stats > src/container_count.rs
+cargo run --bin fetch_stats
 ```
-
-## CI
-
-Managed via [project-ops](https://github.com/FAZuH/project-ops). Pushing to `release` builds and pushes to `ghcr.io/fazuh/fazuh-site:latest`.
 
 ## License
 

@@ -43,6 +43,7 @@ Commands:
   lint      - Run linter with "cargo clippy --all-targets --all-features --no-deps --fix --allow-dirty"
   test      - Run tests with "cargo test --all-features --no-fail-fast"
   build     - Build release with "tailwindcss + dx build --release"
+  dev       - Run "dx serve --port 8080"
   all       - Run format, lint, test, and build in sequence
   help      - Show this help message
 
@@ -85,6 +86,17 @@ cmd_build() {
     print_success "Release build completed"
 }
 
+cmd_dev() {
+    print_info "Starting dev server..."
+    # tailwind calls watchman, which if not installed returns 127, and cascades under `set -e`
+    set -em  
+    tailwindcss -i input.css -o assets/tailwind.css --watch &>/dev/null &
+    TAILWIND_PID=$!
+    trap "kill $TAILWIND_PID 2>/dev/null" EXIT
+    dx serve --port 8080
+    print_success "Dev server stopped"
+}
+
 cmd_all() {
     print_info "Running all tasks..."
     cmd_format
@@ -110,6 +122,9 @@ execute_command() {
             ;;
         build)
             cmd_build
+            ;;
+        dev)
+            cmd_dev
             ;;
         all)
             cmd_all

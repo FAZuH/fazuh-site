@@ -1,157 +1,103 @@
+use std::sync::LazyLock;
+
 use dioxus::prelude::*;
 
 use crate::components::Collapsible;
+use crate::server_stats::CONTAINER_COUNT;
+use crate::server_stats::SERVER_COUNT;
+use crate::server_stats::STACK_COUNT;
 
 struct Framework {
-    name: &'static str,
-    desc: &'static str,
+    name: String,
+    desc: String,
 }
 
 struct Lang {
-    name: &'static str,
-    badge: &'static str,
-    children: &'static [Framework],
+    name: String,
+    badge: String,
+    children: Vec<Framework>,
 }
 
 struct Tool {
-    badge: &'static str,
-    desc: &'static str,
+    badge: String,
+    desc: String,
 }
 
-const LANGS: &[Lang] = &[
-    Lang {
-        name: "Rust",
-        badge: "https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white",
-        children: &[
-            Framework {
-                name: "Poise",
-                desc: "Discord bot",
-            },
-            Framework {
-                name: "ratatui",
-                desc: "TUI",
-            },
-            Framework {
-                name: "Diesel",
-                desc: "ORM",
-            },
-            Framework {
-                name: "sqlx",
-                desc: "SQLite",
-            },
-            Framework {
-                name: "Axum",
-                desc: "Web backend",
-            },
-        ],
-    },
-    Lang {
-        name: "Python",
-        badge: "https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white",
-        children: &[
-            Framework {
-                name: "Nextcord",
-                desc: "Discord bot",
-            },
-            Framework {
-                name: "SQLAlchemy",
-                desc: "Database ORM",
-            },
-            Framework {
-                name: "Pandas, NumPy",
-                desc: "Data analysis",
-            },
-            Framework {
-                name: "Matplotlib",
-                desc: "Plotting",
-            },
-            Framework {
-                name: "Playwright",
-                desc: "Web automation",
-            },
-            Framework {
-                name: "Streamlit",
-                desc: "Rapid web prototyping",
-            },
-        ],
-    },
-    Lang {
-        name: "MySQL",
-        badge: "https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white",
-        children: &[],
-    },
-];
+macro_rules! fw {
+    ($name:expr, $desc:expr) => {
+        Framework {
+            name: $name.into(),
+            desc: $desc.into(),
+        }
+    };
+}
 
-const DEVOPS: &[Tool] = &[
-    Tool {
-        badge: "https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white",
-        desc: "Declarative service management \u{2014} 4 servers, ~20 compose stacks, 99 containers",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Ansible-EE0000?style=flat-square&logo=ansible&logoColor=white",
-        desc: "Configuration management and node provisioning",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Tailscale-242424?style=flat-square&logo=tailscale&logoColor=white",
-        desc: "Secure connectivity for private services, gaming, exit nodes",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=nginx&logoColor=white",
-        desc: "Reverse proxy",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Consul-F24C53?style=flat-square&logo=consul&logoColor=white",
-        desc: "Service configs for auto-discovery and routing with lab-ops",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Restic-00ADEE?style=flat-square",
-        desc: "Automatic backups",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Autorestic-000000?style=flat-square",
-        desc: "Automatic backups (wrapper)",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white",
-        desc: "Simple scripting & automation",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/SOPS-5E6772?style=flat-square",
-        desc: "Secrets encryption",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/age-000000?style=flat-square",
-        desc: "Secrets encryption",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white",
-        desc: "Server monitoring",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white",
-        desc: "Server monitoring",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Uptime_Kuma-607D8B?style=flat-square&logo=uptime-kuma&logoColor=white",
-        desc: "Server monitoring",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Wazuh-3585F8?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iIzM1ODVmOCIgZD0iTTI0IDBDMTAuOTcxIDAgMCAxMC45NzEgMCAyNHMxMC42MjkgMjQgMjQgMjQgMjQtMTAuNjI5IDI0LTI0UzM3LjAyOSAwIDI0IDBtMS4zNzEgMzIuOTE0LTQuMTE0LTEzLjAyOS00LjExNCAxMy4wMjloLTMuMDg2TDguNTcxIDE0Ljc0M0gxMmwzLjc3MSAxMi4zNDMgMy43NzItMTIuMzQzaDMuMDg2bDMuNzcgMTIuMzQzIDMuNzcyLTEyLjM0M0gzMy42bC01LjE0MyAxOC4xNzF6bTEwLjk3MS4zNDNjLTEuNzE0IDAtMi43NDMtMS4zNzItMi43NDMtMi43NDMgMC0xLjcxNCAxLjM3Mi0yLjc0MyAyLjc0My0yLjc0MyAxLjM3MiAwIDIuNzQzIDEuMzcxIDIuNzQzIDIuNzQzcy0xLjAyOCAyLjc0My0yLjc0MyAyLjc0MyIvPjwvc3ZnPg==",
-        desc: "Security monitoring (SIEM / XDR)",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white",
-        desc: "Infrastructure as Code for cloud infrastructure and VM provisioning",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/OVH-0050D7?style=flat-square&logo=ovh&logoColor=white",
-        desc: "Cloud provider \u{2014} 1 VPS & 1 dedicated (+2 VM) \u{2014} 4 nodes",
-    },
-    Tool {
-        badge: "https://img.shields.io/badge/Proxmox-E57000?style=flat-square&logo=proxmox&logoColor=white",
-        desc: "Virtualization in dedicated server for VMs and resource allocation",
-    },
-];
+macro_rules! lang {
+    ($name:expr, $badge:expr, [$($child:expr),* $(,)?]) => {
+        Lang {
+            name: $name.into(),
+            badge: $badge.into(),
+            children: vec![$($child),*]
+        }
+    };
+    ($name:expr, $badge:expr) => {
+        Lang {
+            name: $name.into(),
+            badge: $badge.into(),
+            children: Vec::new()
+        }
+    };
+}
+
+macro_rules! tool {
+    ($desc:expr, $badge:expr) => {
+        Tool {
+            badge: $badge.into(),
+            desc: $desc.into(),
+        }
+    };
+}
+
+#[rustfmt::skip]
+static LANGS: LazyLock<Vec<Lang>> = LazyLock::new(|| vec![
+    lang!("Rust", "https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white", [
+        fw!("Poise", "Discord bot"),
+        fw!("ratatui", "TUI"),
+        fw!("Diesel", "ORM"),
+        fw!("sqlx", "SQLite"),
+        fw!("Axum", "Web backend"),
+    ]),
+    lang!("Python", "https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white", [
+        fw!("Nextcord", "Discord bot"),
+        fw!("SQLAlchemy", "Database ORM"),
+        fw!("Pandas, NumPy", "Data analysis"),
+        fw!("Matplotlib", "Plotting"),
+        fw!("Playwright", "Web automation"),
+        fw!("Streamlit", "Rapid web prototyping"),
+    ]),
+    lang!("MySQL", "https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white"),
+]);
+
+#[rustfmt::skip]
+static DEVOPS: LazyLock<Vec<Tool>> = LazyLock::new(|| vec![
+    tool!("Declarative service management", "https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white"),
+    tool!("Configuration management and node provisioning", "https://img.shields.io/badge/Ansible-EE0000?style=flat-square&logo=ansible&logoColor=white"),
+    tool!("Secure connectivity for private services, gaming, exit nodes", "https://img.shields.io/badge/Tailscale-242424?style=flat-square&logo=tailscale&logoColor=white"),
+    tool!("Reverse proxy", "https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=nginx&logoColor=white"),
+    tool!("Service configs for auto-discovery and routing with lab-ops", "https://img.shields.io/badge/Consul-F24C53?style=flat-square&logo=consul&logoColor=white"),
+    tool!("Automatic backups", "https://img.shields.io/badge/Restic-00ADEE?style=flat-square"),
+    tool!("Automatic backups (wrapper)", "https://img.shields.io/badge/Autorestic-000000?style=flat-square"),
+    tool!("Simple scripting & automation", "https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white"),
+    tool!("Secrets encryption", "https://img.shields.io/badge/SOPS-5E6772?style=flat-square"),
+    tool!("Secrets encryption", "https://img.shields.io/badge/age-000000?style=flat-square"),
+    tool!("Server monitoring", "https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white"),
+    tool!("Server monitoring", "https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white"),
+    tool!("Server monitoring", "https://img.shields.io/badge/Uptime_Kuma-607D8B?style=flat-square&logo=uptime-kuma&logoColor=white"),
+    tool!("Security monitoring (SIEM / XDR)", "https://img.shields.io/badge/Wazuh-3585F8?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iIzM1ODVmOCIgZD0iTTI0IDBDMTAuOTcxIDAgMCAxMC45NzEgMCAyNHMxMC42MjkgMjQgMjQgMjQgMjQtMTAuNjI5IDI0LTI0UzM3LjAyOSAwIDI0IDBtMS4zNzEgMzIuOTE0LTQuMTE0LTEzLjAyOS00LjExNCAxMy4wMjloLTMuMDg2TDguNTcxIDE0Ljc0M0gxMmwzLjc3MSAxMi4zNDMgMy43NzItMTIuMzQzaDMuMDg2bDMuNzcgMTIuMzQzIDMuNzcyLTEyLjM0M0gzMy42bC01LjE0MyAxOC4xNzF6bTEwLjk3MS4zNDNjLTEuNzE0IDAtMi43NDMtMS4zNzItMi43NDMtMi43NDMgMC0xLjcxNCAxLjM3Mi0yLjc0MyAyLjc0My0yLjc0MyAxLjM3MiAwIDIuNzQzIDEuMzcxIDIuNzQzIDIuNzQzcy0xLjAyOCAyLjc0My0yLjc0MyAyLjc0MyIvPjwvc3ZnPg=="),
+    tool!("Infrastructure as Code for cloud infrastructure and VM provisioning", "https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white"),
+    tool!(format!("Cloud provider — managing {SERVER_COUNT} nodes"), "https://img.shields.io/badge/OVH-0050D7?style=flat-square&logo=ovh&logoColor=white"),
+    tool!("Virtualization in dedicated server for VMs and resource allocation", "https://img.shields.io/badge/Proxmox-E57000?style=flat-square&logo=proxmox&logoColor=white"),
+]);
 
 #[component]
 pub fn Skills() -> Element {
@@ -162,8 +108,8 @@ pub fn Skills() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6",
                 h2 {
-                    class: "text-base font-bold text-ink mb-2",
-                    "[+] skills"
+                    class: "text-xl font-bold text-ink mb-2",
+                    "Skills"
                 }
                 p {
                     class: "text-sm text-mute mb-8 max-w-[65ch]",
@@ -181,10 +127,10 @@ pub fn Skills() -> Element {
                                 let is_last = i == LANGS.len() - 1;
                                 let branch = if is_last { "└──" } else { "├──" };
                                 let continuation = if is_last { "   " } else { "│  " };
-                                let children = lang.children;
+                                let children = &lang.children;
                                 let children_empty = children.is_empty();
-                                let name = lang.name;
-                                let badge = lang.badge;
+                                let name = &lang.name;
+                                let badge = &lang.badge;
                                 rsx! {
                                     div {
                                         class: "flex items-start gap-2 py-1.5 flex-wrap",
@@ -206,8 +152,8 @@ pub fn Skills() -> Element {
                                                 {children.iter().enumerate().map(|(ci, fw)| {
                                                     let fw_last = ci == children.len() - 1;
                                                     let fw_branch = if fw_last { "└──" } else { "├──" };
-                                                    let fw_name = fw.name;
-                                                    let fw_desc = fw.desc;
+                                                    let fw_name = &fw.name;
+                                                    let fw_desc = &fw.desc;
                                                     rsx! {
                                                         div {
                                                             class: "flex items-baseline gap-3 py-0.5",
@@ -237,8 +183,12 @@ pub fn Skills() -> Element {
                                 {DEVOPS.iter().enumerate().map(|(i, tool)| {
                                     let is_last = i == DEVOPS.len() - 1;
                                     let branch = if is_last { "└──" } else { "├──" };
-                                    let badge = tool.badge;
-                                    let desc = tool.desc;
+                                    let badge = &tool.badge;
+                                    let desc = if i == 0 {
+                                        format!("Declarative service management \u{2014} {SERVER_COUNT} servers, ~{STACK_COUNT} compose stacks, {CONTAINER_COUNT} containers")
+                                    } else {
+                                        tool.desc.to_string()
+                                    };
                                     rsx! {
                                         div {
                                             class: "flex items-start gap-3 py-1.5 flex-nowrap",

@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Collapsible(
-    label: &'static str,
+    label: String,
     default_open: bool,
     always_open: Option<bool>,
     children: Element,

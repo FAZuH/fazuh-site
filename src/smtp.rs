@@ -14,9 +14,9 @@ use lettre::transport::smtp::authentication::Credentials;
 use tracing::error;
 
 #[cfg(feature = "server")]
-use crate::utils::config::Config;
+use crate::config::Config;
 #[cfg(feature = "server")]
-use crate::utils::validation::ContactForm;
+use crate::validation::ContactForm;
 
 #[cfg(feature = "server")]
 pub async fn send_email(form: &ContactForm) -> Result<(), String> {
@@ -71,6 +71,6 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
 }
 
 #[cfg(not(feature = "server"))]
-pub async fn send_email(_form: &crate::utils::validation::ContactForm) -> Result<(), String> {
+pub async fn send_email(_form: &crate::validation::ContactForm) -> Result<(), String> {
     unreachable!("send_email called without server feature")
 }

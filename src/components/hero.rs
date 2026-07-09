@@ -1,5 +1,8 @@
 use dioxus::prelude::*;
 
+use crate::server_stats::CONTAINER_COUNT;
+use crate::server_stats::SERVER_COUNT;
+
 static AVATAR: Asset = asset!("/assets/profile.jpg");
 
 #[component]
@@ -25,7 +28,15 @@ pub fn Hero() -> Element {
                         }
                         p {
                             class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
-                            "Software Developer · Infrastructure Engineer · Statistics Student"
+                            "Cloud Infrastructure Engineer"
+                        }
+                        p {
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            "Software Developer"
+                        }
+                        p {
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            "Statistics Student"
                         }
                     }
                     div {
@@ -48,7 +59,12 @@ pub fn Hero() -> Element {
                     class: "bg-surface-dark text-on-dark p-8 md:p-10 font-mono leading-[1.4] text-xs md:text-sm",
                     div {
                         class: "mb-6",
-                        div { class: "whitespace-pre", {WORDMARK} }
+                        div {
+                            class: "whitespace-pre",
+                            "┏┓┏┓┏┓  ┓┏
+┣ ┣┫┏┛┓┏┣┫
+┻ ┛┗┗┛┗┻┛┗"
+                        }
                     }
                     div {
                         class: "border-t border-on-dark-mute/20 pt-4 flex flex-col gap-1.5",
@@ -57,7 +73,7 @@ pub fn Hero() -> Element {
                         StatLine { label: "WM", value: "Hyprland" }
                         StatLine { label: "Editor", value: "Neovim" }
                         StatLine { label: "Lang", value: "Rust, Python" }
-                        StatLine { label: "Servers", value: "4 nodes · 99 ctnrs" }
+                        StatLine { label: "Servers", value: format!("{SERVER_COUNT} nodes · {CONTAINER_COUNT} ctnrs").as_str() }
                     }
                     div {
                         class: "mt-4 pt-3 border-t border-on-dark-mute/20 text-on-dark-mute text-xs",
@@ -72,7 +88,7 @@ pub fn Hero() -> Element {
 }
 
 #[component]
-fn StatLine(label: &'static str, value: &'static str) -> Element {
+fn StatLine(label: String, value: String) -> Element {
     rsx! {
         div {
             class: "flex justify-between",
@@ -81,9 +97,3 @@ fn StatLine(label: &'static str, value: &'static str) -> Element {
         }
     }
 }
-
-const WORDMARK: &str = r#"
-┏┓┏┓┏┓  ┓┏
-┣ ┣┫┏┛┓┏┣┫
-┻ ┛┗┗┛┗┻┛┗
-"#;
