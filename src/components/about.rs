@@ -1,5 +1,8 @@
 use dioxus::prelude::*;
 
+use crate::server_stats::CONTAINER_COUNT;
+use crate::server_stats::SERVER_COUNT;
+
 #[component]
 pub fn About() -> Element {
     rsx! {
@@ -16,22 +19,18 @@ pub fn About() -> Element {
                     class: "border-t border-hairline",
                     div {
                         class: "py-8 md:py-10 flex flex-col gap-8",
-                        p {
-                            class: "text-base text-body leading-relaxed max-w-[65ch]",
-                            "Infrastructure engineer, software developer, and Statistics student in the Mathematics department at University of Indonesia. Building things for the terminal, Discord, and the homelab \u{2014} sometimes all three."
-                        }
                         ul {
                             class: "flex flex-col gap-3 text-base",
                             BulletItem {
-                                label: "infrastructure engineer",
-                                desc: "4 servers, ~20 Docker stacks, homelab automation with Ansible, Terraform, Consul, and custom tooling.",
+                                label: "Cloud Infrastructure Engineer",
+                                desc: format!("Managing {SERVER_COUNT} servers and ~{CONTAINER_COUNT} Docker containers with Ansible, Terraform, Consul, and custom tooling."),
                             }
                             BulletItem {
-                                label: "software developer",
+                                label: "Software Developer",
                                 desc: "Rust, Python. Writing Discord bots, TUI tools, CLIs, and scripts.",
                             }
                             BulletItem {
-                                label: "student",
+                                label: "Student",
                                 desc: "Statistics student in the Mathematics department at University of Indonesia.",
                             }
                         }
@@ -48,6 +47,11 @@ pub fn About() -> Element {
                             desc: "mail@fazuh.com",
                             href: "mailto:mail@fazuh.com",
                         }
+                        NavLink {
+                            label: "Discord",
+                            desc: ".fazuh",
+                            href: "https://discord.com/channels/@me",
+                        }
                     }
                 }
             }
@@ -56,7 +60,7 @@ pub fn About() -> Element {
 }
 
 #[component]
-fn BulletItem(label: &'static str, desc: &'static str) -> Element {
+fn BulletItem(label: String, desc: String) -> Element {
     rsx! {
         li {
             class: "gap-2",

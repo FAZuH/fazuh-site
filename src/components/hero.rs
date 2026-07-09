@@ -28,11 +28,11 @@ pub fn Hero() -> Element {
                         }
                         p {
                             class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
-                            "Software Developer"
+                            "Cloud Infrastructure Engineer"
                         }
                         p {
                             class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
-                            "Infrastructure Engineer"
+                            "Software Developer"
                         }
                         p {
                             class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",

@@ -76,7 +76,7 @@ pub fn Projects() -> Element {
                             div { class: "pl-3 mb-4",
                                 {NOTABLE.iter().enumerate().map(|(i, p)| {
                                     let is_last = i == NOTABLE.len() - 1;
-                                    rsx! { ProjectRow { project: p, is_last, indent: true } }
+                                    rsx! { ProjectRow { project: p, is_last } }
                                 })}
                             }
                         }
@@ -88,7 +88,7 @@ pub fn Projects() -> Element {
                             div { class: "pl-3 mb-4",
                                 {SMALLER.iter().enumerate().map(|(i, p)| {
                                     let is_last = i == SMALLER.len() - 1;
-                                    rsx! { ProjectRow { project: p, is_last, indent: true } }
+                                    rsx! { ProjectRow { project: p, is_last } }
                                 })}
                             }
                         }
@@ -100,7 +100,7 @@ pub fn Projects() -> Element {
                             div { class: "pl-3",
                                 {COURSE_WORK.iter().enumerate().map(|(i, p)| {
                                     let is_last = i == COURSE_WORK.len() - 1;
-                                    rsx! { ProjectRow { project: p, is_last, indent: true } }
+                                    rsx! { ProjectRow { project: p, is_last } }
                                 })}
                             }
                         }
@@ -112,7 +112,7 @@ pub fn Projects() -> Element {
 }
 
 #[component]
-fn ProjectRow(project: &'static Project, is_last: bool, indent: bool) -> Element {
+fn ProjectRow(project: &'static Project, is_last: bool) -> Element {
     let branch = if is_last { "└──" } else { "├──" };
 
     rsx! {
@@ -122,11 +122,7 @@ fn ProjectRow(project: &'static Project, is_last: bool, indent: bool) -> Element
             rel: if project.link.starts_with("http") { "noopener noreferrer" } else { "" },
             class: "flex items-baseline gap-3 py-1.5 hover:bg-surface-soft transition-colors rounded-sm \
                 group cursor-pointer",
-            if indent {
-                span { class: "text-mute ml-3", "{branch}" }
-            } else {
-                span { class: "text-mute ml-2", "{branch}" }
-            }
+            span { class: "text-mute ml-3", "{branch}" }
             span {
                 class: "text-ink font-medium min-w-[8rem] group-hover:text-accent transition-colors",
                 "{project.name}"
