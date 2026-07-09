@@ -6,6 +6,7 @@ pub mod config;
 pub mod logging;
 pub mod rate_limit;
 mod server;
+pub mod server_stats;
 #[cfg(feature = "server")]
 pub mod smtp;
 pub mod validation;

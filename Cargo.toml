@@ -16,7 +16,7 @@ name = "fazuh-site"
 path = "src/main.rs"
 
 [[bin]]
-name = "fetch_stats"
+name = "fetch-stats"
 path = "src/bin/fetch_stats.rs"
 
 [lints.clippy]

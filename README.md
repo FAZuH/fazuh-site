@@ -26,10 +26,12 @@ tailwindcss -i input.css -o assets/tailwind.css
 dx serve
 ```
 
-### Refresh container count
+### Refresh live stats
+
+SSHs into lab nodes to count containers, and runs a local `find` for docker-compose stacks. Writes the result directly to `src/container_count.rs`.
 
 ```bash
-cargo run --bin fetch_stats > src/container_count.rs
+cargo run --bin fetch_stats
 ```
 
 ## License

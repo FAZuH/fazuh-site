@@ -1,5 +1,8 @@
 use dioxus::prelude::*;
 
+use crate::server_stats::CONTAINER_COUNT;
+use crate::server_stats::SERVER_COUNT;
+
 static AVATAR: Asset = asset!("/assets/profile.jpg");
 
 #[component]
@@ -70,7 +73,7 @@ pub fn Hero() -> Element {
                         StatLine { label: "WM", value: "Hyprland" }
                         StatLine { label: "Editor", value: "Neovim" }
                         StatLine { label: "Lang", value: "Rust, Python" }
-                        StatLine { label: "Servers", value: "4 nodes · 99 ctnrs" }
+                        StatLine { label: "Servers", value: format!("{SERVER_COUNT} nodes · {CONTAINER_COUNT} ctnrs").as_str() }
                     }
                     div {
                         class: "mt-4 pt-3 border-t border-on-dark-mute/20 text-on-dark-mute text-xs",
@@ -85,7 +88,7 @@ pub fn Hero() -> Element {
 }
 
 #[component]
-fn StatLine(label: &'static str, value: &'static str) -> Element {
+fn StatLine(label: String, value: String) -> Element {
     rsx! {
         div {
             class: "flex justify-between",

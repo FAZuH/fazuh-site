@@ -1,6 +1,9 @@
 use dioxus::prelude::*;
 
 use crate::components::Collapsible;
+use crate::server_stats::CONTAINER_COUNT;
+use crate::server_stats::SERVER_COUNT;
+use crate::server_stats::STACK_COUNT;
 
 struct Framework {
     name: &'static str,
@@ -85,7 +88,7 @@ const LANGS: &[Lang] = &[
 const DEVOPS: &[Tool] = &[
     Tool {
         badge: "https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white",
-        desc: "Declarative service management \u{2014} 4 servers, ~20 compose stacks, 99 containers",
+        desc: "Declarative service management",
     },
     Tool {
         badge: "https://img.shields.io/badge/Ansible-EE0000?style=flat-square&logo=ansible&logoColor=white",
@@ -238,7 +241,11 @@ pub fn Skills() -> Element {
                                     let is_last = i == DEVOPS.len() - 1;
                                     let branch = if is_last { "└──" } else { "├──" };
                                     let badge = tool.badge;
-                                    let desc = tool.desc;
+                                    let desc = if i == 0 {
+                                        format!("Declarative service management \u{2014} {SERVER_COUNT} servers, ~{STACK_COUNT} compose stacks, {CONTAINER_COUNT} containers")
+                                    } else {
+                                        tool.desc.to_string()
+                                    };
                                     rsx! {
                                         div {
                                             class: "flex items-start gap-3 py-1.5 flex-nowrap",
