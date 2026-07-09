@@ -80,6 +80,12 @@ pub async fn submit_contact(form: ContactForm) -> Result<ContactResponse, Server
 }
 
 #[cfg(feature = "server")]
+/// Extracts the client IP from request headers.
+///
+/// Relies on `X-Forwarded-For` (first address) with fallback to `X-Real-Ip`.
+/// **Security**: Ensure your reverse proxy strips these headers from external
+/// requests before setting its own trusted values, otherwise clients can spoof
+/// their IP and bypass the per-IP rate limit.
 fn get_client_ip(headers: &HeaderMap) -> String {
     headers
         .get("X-Forwarded-For")
