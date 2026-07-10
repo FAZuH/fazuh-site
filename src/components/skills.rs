@@ -90,13 +90,14 @@ static DEVOPS: LazyLock<Vec<Tool>> = LazyLock::new(|| vec![
     tool!("Simple scripting & automation", "https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnu-bash&logoColor=white"),
     tool!("Secrets encryption", "https://img.shields.io/badge/SOPS-5E6772?style=flat-square"),
     tool!("Secrets encryption", "https://img.shields.io/badge/age-000000?style=flat-square"),
-    tool!("Server monitoring", "https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white"),
-    tool!("Server monitoring", "https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white"),
-    tool!("Server monitoring", "https://img.shields.io/badge/Uptime_Kuma-607D8B?style=flat-square&logo=uptime-kuma&logoColor=white"),
-    tool!("Security monitoring (SIEM / XDR)", "https://img.shields.io/badge/Wazuh-3585F8?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iIzM1ODVmOCIgZD0iTTI0IDBDMTAuOTcxIDAgMCAxMC45NzEgMCAyNHMxMC42MjkgMjQgMjQgMjQgMjQtMTAuNjI5IDI0LTI0UzM3LjAyOSAwIDI0IDBtMS4zNzEgMzIuOTE0LTQuMTE0LTEzLjAyOS00LjExNCAxMy4wMjloLTMuMDg2TDguNTcxIDE0Ljc0M0gxMmwzLjc3MSAxMi4zNDMgMy43NzItMTIuMzQzaDMuMDg2bDMuNzcgMTIuMzQzIDMuNzcyLTEyLjM0M0gzMy42bC01LjE0MyAxOC4xNzF6bTEwLjk3MS4zNDNjLTEuNzE0IDAtMi43NDMtMS4zNzItMi43NDMtMi43NDMgMC0xLjcxNCAxLjM3Mi0yLjc0MyAyLjc0My0yLjc0MyAxLjM3MiAwIDIuNzQzIDEuMzcxIDIuNzQzIDIuNzQzcy0xLjAyOCAyLjc0My0yLjc0MyAyLjc0MyIvPjwvc3ZnPg=="),
-    tool!("Infrastructure as Code for cloud infrastructure and VM provisioning", "https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white"),
+    tool!("Node monitoring", "https://img.shields.io/badge/Grafana-F46800?style=flat-square&logo=grafana&logoColor=white"),
+    tool!("Node & service metrics collection", "https://img.shields.io/badge/Prometheus-E6522C?style=flat-square&logo=prometheus&logoColor=white"),
+    tool!("Service monitoring", "https://img.shields.io/badge/Uptime_Kuma-607D8B?style=flat-square&logo=uptime-kuma&logoColor=white"),
+    tool!("Security monitoring (SIEM / XDR)", "https://img.shields.io/badge/Wazuh-3585F8?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJtMjk3LjQgMzA5LTYzLjgtMjA2LjNoLTQ5LjdMMTIwLjEgMzA5IDU3LjIgMTAyLjdIMGw5MS4xIDMwMC44aDQ3LjNsNzAuNC0yMTcuOSA3MC40IDIxNy45aDQ2LjRsOTItMzAwLjhoLTU3LjJ6bTE2Ny40IDUuOGMyNi4xIDAgNDcuMiAyMS4xIDQ3LjIgNDcuMnMtMjEuMSA0Ny4yLTQ3LjIgNDcuMi00Ny4yLTIxLjEtNDcuMi00Ny4yIDIxLjEtNDcuMiA0Ny4yLTQ3LjIiIHN0eWxlPSJmaWxsOiNmZmYiLz48L3N2Zz4="),
+    tool!("DNS and cloud firewall IaC", "https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white"),
     tool!(format!("Cloud provider — managing {SERVER_COUNT} nodes"), "https://img.shields.io/badge/OVH-0050D7?style=flat-square&logo=ovh&logoColor=white"),
     tool!("Virtualization in dedicated server for VMs and resource allocation", "https://img.shields.io/badge/Proxmox-E57000?style=flat-square&logo=proxmox&logoColor=white"),
+    tool!("Web analytics", "https://img.shields.io/badge/Umami-000000?style=flat-square&logo=umami&logoColor=white"),
 ]);
 
 #[component]
@@ -134,16 +135,16 @@ pub fn Skills() -> Element {
                                 rsx! {
                                     div {
                                         class: "flex items-start gap-2 py-1.5 flex-wrap",
-                                        span { class: "text-mute", "{branch}" }
+                                        span { class: "text-mute shrink-0", "{branch}" }
                                         img {
                                             src: badge,
                                             alt: name,
                                             height: "20",
                                             loading: "lazy",
-                                            class: "h-5 inline-block align-middle",
+                                            class: "h-5 inline-block align-middle shrink-0",
                                         }
                                         span {
-                                            class: "text-ink font-medium self-center",
+                                            class: "text-ink font-medium self-center min-w-0",
                                             "{name}"
                                         }
                                         if !children_empty {
@@ -156,10 +157,10 @@ pub fn Skills() -> Element {
                                                     let fw_desc = &fw.desc;
                                                     rsx! {
                                                         div {
-                                                            class: "flex items-baseline gap-3 py-0.5",
-                                                            span { class: "text-mute whitespace-pre", "{continuation}{fw_branch}" }
-                                                            span { class: "text-ink min-w-[7rem]", "{fw_name}" }
-                                                            span { class: "text-mute whitespace-nowrap", "{fw_desc}" }
+                                                            class: "flex items-baseline gap-3 py-0.5 flex-wrap",
+                                                            span { class: "text-mute shrink-0", "{continuation}{fw_branch}" }
+                                                            span { class: "text-ink shrink-0 sm:min-w-[7rem]", "{fw_name}" }
+                                                            span { class: "text-mute", "{fw_desc}" }
                                                         }
                                                     }
                                                 })}
@@ -191,15 +192,15 @@ pub fn Skills() -> Element {
                                     };
                                     rsx! {
                                         div {
-                                            class: "flex items-start gap-3 py-1.5 flex-nowrap",
-                                            span { class: "text-mute", "{branch}" }
+                                            class: "flex items-start gap-3 py-1.5",
+                                            span { class: "text-mute shrink-0", "{branch}" }
                                             img {
                                                 src: badge,
                                                 height: "20",
                                                 loading: "lazy",
-                                                class: "h-5 inline-block align-middle",
+                                                class: "h-5 inline-block align-middle shrink-0",
                                             }
-                                            span { class: "text-body self-center whitespace-nowrap", "{desc}" }
+                                            span { class: "text-body self-center min-w-0", "{desc}" }
                                         }
                                     }
                                 })}

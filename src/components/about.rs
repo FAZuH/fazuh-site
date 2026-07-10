@@ -36,7 +36,7 @@ pub fn About() -> Element {
                         }
                     }
                     div {
-                        class: "border-t border-hairline pt-6 flex flex-col md:flex-row gap-3 md:gap-12 text-sm",
+                        class: "border-t border-hairline pt-6 flex flex-col md:flex-row gap-6 md:gap-12 text-sm",
                         NavLink {
                             label: "GitHub",
                             desc: "github.com/FAZuH \u{2014} 38 public repos",

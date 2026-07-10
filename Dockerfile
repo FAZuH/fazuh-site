@@ -26,7 +26,9 @@ WORKDIR /app
 
 # Cache build dependencies
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir -p src/components src/utils src/bin && \
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+    mkdir -p src/components src/utils src/bin && \
     echo "fn main() {}" > src/main.rs && \
     echo "" > src/app.rs && \
     echo "" > src/server.rs && \
@@ -45,20 +47,26 @@ COPY assets/ ./assets/
 COPY input.css ./
 
 # Build app
-RUN tailwindcss -i input.css -o assets/tailwind.css && \
+RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
+    tailwindcss -i input.css -o assets/tailwind.css && \
     dx build --release
 
 # Runtime stage
 FROM debian:trixie-slim
 RUN apt-get update && apt-get install -y libssl3 ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN addgroup -S app && adduser -S -G app -h /app -s /sbin/nologin app
 
 COPY --from=build /app/target/dx/fazuh-site/release/web/public /app/public
 COPY --from=build /app/target/dx/fazuh-site/release/web/server /app/server
+
+RUN mkdir /app/logs && chown -R app:app /app
 
 # Dioxus binds to localhost inside the container by default;
 # override via the IP env var to expose it on the container's network.
 ENV IP=0.0.0.0
 ENV PORT=8080
 
+USER app
 WORKDIR /app
 CMD ["./server"]

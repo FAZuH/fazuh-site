@@ -8,7 +8,7 @@ pub fn Footer() -> Element {
             div {
                 class: "max-w-[960px] mx-auto px-6 py-8",
                 div {
-                    class: "flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-mute",
+                    class: "flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-mute",
                     div {
                         class: "flex items-center gap-4",
                         a {
