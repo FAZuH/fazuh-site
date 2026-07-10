@@ -15,8 +15,8 @@ macro_rules! proj {
     ($name:expr, $desc:expr, $link:expr) => {
         Project {
             name: $name.into(),
-            desc: $name.into(),
-            link: $name.into(),
+            desc: $desc.into(),
+            link: $link.into(),
         }
     };
 }
