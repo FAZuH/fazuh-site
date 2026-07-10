@@ -54,8 +54,8 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
 
 # Runtime stage
 FROM debian:trixie-slim
-RUN apt-get update && apt-get install -y libssl3 ca-certificates && rm -rf /var/lib/apt/lists/*
-RUN addgroup -S app && adduser -S -G app -h /app -s /sbin/nologin app
+RUN apt-get update && apt-get install -y libssl3 ca-certificates adduser && rm -rf /var/lib/apt/lists/*
+RUN adduser --system --group --home /app --shell /sbin/nologin app
 
 COPY --from=build /app/target/dx/fazuh-site/release/web/public /app/public
 COPY --from=build /app/target/dx/fazuh-site/release/web/server /app/server
