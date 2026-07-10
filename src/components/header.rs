@@ -24,9 +24,16 @@ pub fn Header() -> Element {
                         "FAZuH"
                     }
 
+                    if is_menu_open() {
+                        div {
+                            class: "fixed inset-0 z-40 bg-canvas/80 md:hidden",
+                            onclick: move |_| is_menu_open.set(false),
+                        }
+                    }
+
                     nav {
                         class: if is_menu_open() {
-                            "flex flex-col absolute top-full left-0 right-0 bg-canvas border-t border-hairline md:static md:flex-row md:border-0 md:gap-1"
+                            "flex flex-col absolute top-full left-0 right-0 z-50 bg-canvas border-t border-hairline md:static md:flex-row md:border-0 md:gap-1"
                         } else {
                             "hidden md:flex md:flex-row"
                         },
@@ -37,7 +44,7 @@ pub fn Header() -> Element {
                                     li {
                                         a {
                                             href: *href,
-                                            class: "block py-2 md:py-0 md:px-3 text-sm text-body hover:text-ink transition-colors",
+                                            class: "block py-3 md:py-0 md:px-3 text-sm text-body hover:text-ink transition-colors",
                                             onclick: move |_| is_menu_open.set(false),
                                             "{label}"
                                         }
@@ -49,7 +56,7 @@ pub fn Header() -> Element {
                                     href: "https://github.com/FAZuH",
                                     target: "_blank",
                                     rel: "noopener noreferrer",
-                                    class: "block py-2 md:py-0 md:px-3 text-sm text-body hover:text-ink transition-colors group relative",
+                                    class: "block py-3 md:py-0 md:px-3 text-sm text-body hover:text-ink transition-colors group relative",
                                     GitHubIcon {}
                                     span {
                                         class: "hidden md:block absolute top-full left-1/2 -translate-x-1/2 mt-1 px-3 py-2 bg-surface-dark text-on-dark text-xs rounded-sm opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50",
@@ -61,7 +68,7 @@ pub fn Header() -> Element {
                     }
 
                     button {
-                        class: "md:hidden p-2 text-ink",
+                        class: "md:hidden p-3 text-ink",
                         onclick: move |_| is_menu_open.set(!is_menu_open()),
                         aria_label: "Toggle menu",
                         if is_menu_open() {

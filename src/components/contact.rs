@@ -105,9 +105,9 @@ pub fn Contact() -> Element {
                             oninput: move |evt: FormEvent| message.set(evt.value()),
                         }
                         button {
-                            class: "self-start px-5 py-2 text-sm font-medium bg-ink text-canvas rounded-sm \
+                            class: "w-full sm:w-auto px-5 py-2 text-sm font-medium bg-ink text-canvas rounded-sm \
                                 hover:bg-ink-deep transition-colors disabled:opacity-60 \
-                                disabled:cursor-not-allowed disabled:hover:bg-ink flex items-center gap-2",
+                                disabled:cursor-not-allowed disabled:hover:bg-ink flex items-center gap-2 justify-center",
                             r#type: "submit",
                             disabled: is_pending(),
                             if is_pending() {

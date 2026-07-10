@@ -12,13 +12,13 @@ pub fn Hero() -> Element {
             id: "top",
             class: "pt-32 pb-24 md:pt-40 md:pb-32",
             div {
-                class: "max-w-[960px] mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-16 items-center",
+                class: "max-w-[960px] mx-auto px-6 grid md:grid-cols-2 gap-8 sm:gap-12 md:gap-16 items-center",
                 div {
                     class: "flex flex-col gap-6",
                     img {
                         src: AVATAR,
                         alt: "FAZuH profile picture",
-                        class: "w-28 h-28 md:w-32 md:h-32 object-cover rounded-sm border border-hairline",
+                        class: "w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-sm border border-hairline",
                         loading: "eager",
                     }
                     div {
@@ -27,15 +27,15 @@ pub fn Hero() -> Element {
                             "FAZuH"
                         }
                         p {
-                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed",
                             "Cloud Infrastructure Engineer"
                         }
                         p {
-                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed",
                             "Software Developer"
                         }
                         p {
-                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed max-w-[32ch]",
+                            class: "text-sm md:text-base text-mute mt-2 leading-relaxed",
                             "Statistics Student"
                         }
                     }
@@ -56,7 +56,7 @@ pub fn Hero() -> Element {
 
                 // TUI-card: dark surface with block-pixel ASCII wordmark + neofetch-style stats
                 div {
-                    class: "bg-surface-dark text-on-dark p-8 md:p-10 font-mono leading-[1.4] text-xs md:text-sm",
+                    class: "bg-surface-dark text-on-dark p-6 sm:p-8 md:p-10 font-mono leading-[1.4] text-xs sm:text-sm",
                     div {
                         class: "mb-6",
                         div {
