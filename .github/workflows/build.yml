@@ -40,9 +40,7 @@ jobs:
       - name: Build Tailwind CSS
         run: tailwindcss -i input.css -o assets/tailwind.css
       - name: Install Dioxus CLI
-        run: |
-          curl -sL "https://github.com/DioxusLabs/dioxus/releases/latest/download/dx-$(uname -m)-unknown-linux-gnu" -o /usr/local/bin/dx
-          chmod +x /usr/local/bin/dx
+        run: cargo install dioxus-cli --locked
       - name: Cargo check
         run: cargo check --all-features
       - name: Clippy
