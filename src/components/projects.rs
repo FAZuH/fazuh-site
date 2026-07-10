@@ -121,14 +121,14 @@ fn ProjectRow(project: &'static Project, is_last: bool) -> Element {
             target: if project.link.starts_with("http") { "_blank" } else { "_self" },
             rel: if project.link.starts_with("http") { "noopener noreferrer" } else { "" },
             class: "flex items-baseline gap-3 py-1.5 hover:bg-surface-soft transition-colors rounded-sm \
-                group cursor-pointer",
-            span { class: "text-mute ml-3", "{branch}" }
+                group cursor-pointer flex-wrap",
+            span { class: "text-mute ml-3 shrink-0", "{branch}" }
             span {
-                class: "text-ink font-medium min-w-[8rem] group-hover:text-accent transition-colors",
+                class: "text-ink font-medium shrink-0 sm:min-w-[8rem] group-hover:text-accent transition-colors",
                 "{project.name}"
             }
             span {
-                class: "text-mute",
+                class: "text-mute min-w-0",
                 "{project.desc}"
             }
         }

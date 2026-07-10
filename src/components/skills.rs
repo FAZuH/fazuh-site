@@ -135,16 +135,16 @@ pub fn Skills() -> Element {
                                 rsx! {
                                     div {
                                         class: "flex items-start gap-2 py-1.5 flex-wrap",
-                                        span { class: "text-mute", "{branch}" }
+                                        span { class: "text-mute shrink-0", "{branch}" }
                                         img {
                                             src: badge,
                                             alt: name,
                                             height: "20",
                                             loading: "lazy",
-                                            class: "h-5 inline-block align-middle",
+                                            class: "h-5 inline-block align-middle shrink-0",
                                         }
                                         span {
-                                            class: "text-ink font-medium self-center",
+                                            class: "text-ink font-medium self-center min-w-0",
                                             "{name}"
                                         }
                                         if !children_empty {
@@ -157,10 +157,10 @@ pub fn Skills() -> Element {
                                                     let fw_desc = &fw.desc;
                                                     rsx! {
                                                         div {
-                                                            class: "flex items-baseline gap-3 py-0.5",
-                                                            span { class: "text-mute whitespace-pre", "{continuation}{fw_branch}" }
-                                                            span { class: "text-ink min-w-[7rem]", "{fw_name}" }
-                                                            span { class: "text-mute whitespace-nowrap", "{fw_desc}" }
+                                                            class: "flex items-baseline gap-3 py-0.5 flex-wrap",
+                                                            span { class: "text-mute shrink-0", "{continuation}{fw_branch}" }
+                                                            span { class: "text-ink shrink-0 sm:min-w-[7rem]", "{fw_name}" }
+                                                            span { class: "text-mute", "{fw_desc}" }
                                                         }
                                                     }
                                                 })}
@@ -192,15 +192,15 @@ pub fn Skills() -> Element {
                                     };
                                     rsx! {
                                         div {
-                                            class: "flex items-start gap-3 py-1.5 flex-nowrap",
-                                            span { class: "text-mute", "{branch}" }
+                                            class: "flex items-start gap-3 py-1.5",
+                                            span { class: "text-mute shrink-0", "{branch}" }
                                             img {
                                                 src: badge,
                                                 height: "20",
                                                 loading: "lazy",
-                                                class: "h-5 inline-block align-middle",
+                                                class: "h-5 inline-block align-middle shrink-0",
                                             }
-                                            span { class: "text-body self-center whitespace-nowrap", "{desc}" }
+                                            span { class: "text-body self-center min-w-0", "{desc}" }
                                         }
                                     }
                                 })}
