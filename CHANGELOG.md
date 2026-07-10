@@ -1,3 +1,10 @@
+## 0.1.5 (2026-07-10)
+
+
+### Bug Fixes
+
+* Fix project linking to incorrect url ([dac1b2e](https://github.com/FAZuH/fazuh-site/commit/dac1b2eec09cea1d189e10c6bd9aacaefa96138e))
+
 ## 0.1.4 (2026-07-10)
 
 ## 0.1.3 (2026-07-10)
@@ -28,11 +35,4 @@
 * Panic on invalid reply-to address ([161f1d9](https://github.com/FAZuH/fazuh-site/commit/161f1d90b56176566f028e2b8fbfd2316aacc506))
 
 ## 0.1.1 (2026-07-09)
-
-## 0.1.0 (2026-07-09)
-
-
-### Miscellaneous Chores
-
-* Initial release ([6b300b3](https://github.com/FAZuH/fazuh-site/commit/6b300b3536cf0d27ccc628272b0f9a922e420cf4))
 
