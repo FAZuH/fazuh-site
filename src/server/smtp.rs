@@ -1,28 +1,17 @@
-#[cfg(feature = "server")]
 use lettre::AsyncSmtpTransport;
-#[cfg(feature = "server")]
 use lettre::AsyncTransport;
-#[cfg(feature = "server")]
 use lettre::Message;
-#[cfg(feature = "server")]
 use lettre::Tokio1Executor;
-#[cfg(feature = "server")]
 use lettre::message::Mailbox;
-#[cfg(feature = "server")]
 use lettre::transport::smtp::authentication::Credentials;
-#[cfg(feature = "server")]
 use lettre::transport::smtp::client::Tls;
-#[cfg(feature = "server")]
 use lettre::transport::smtp::client::TlsParameters;
-#[cfg(feature = "server")]
 use tracing::error;
 
-#[cfg(feature = "server")]
-use crate::config::Config;
-#[cfg(feature = "server")]
+use super::config::Config;
+use super::config::SmtpSecurity;
 use crate::validation::ContactForm;
 
-#[cfg(feature = "server")]
 pub async fn send_email(form: &ContactForm) -> Result<(), String> {
     let config = Config::get();
 
@@ -53,7 +42,7 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
         ))
         .map_err(|e| format!("Failed to build email: {e}"))?;
 
-    let transport = if config.smtp_security == crate::config::SmtpSecurity::Tls {
+    let transport = if config.smtp_security == SmtpSecurity::Tls {
         let tls_params = TlsParameters::builder(config.smtp_host.clone())
             .build()
             .map_err(|e| format!("Failed to build TLS parameters: {e}"))?;
@@ -100,9 +89,4 @@ pub async fn send_email(form: &ContactForm) -> Result<(), String> {
             Err(format!("SMTP send failed: {e}"))
         }
     }
-}
-
-#[cfg(not(feature = "server"))]
-pub async fn send_email(_form: &crate::validation::ContactForm) -> Result<(), String> {
-    unreachable!("send_email called without server feature")
 }

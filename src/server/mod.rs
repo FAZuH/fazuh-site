@@ -7,9 +7,17 @@ use serde::Deserialize;
 use serde::Serialize;
 
 #[cfg(feature = "server")]
-use crate::rate_limit;
+mod config;
 #[cfg(feature = "server")]
-use crate::smtp;
+mod logging;
+#[cfg(feature = "server")]
+mod rate_limit;
+#[cfg(feature = "server")]
+mod smtp;
+
+#[cfg(feature = "server")]
+pub use logging::init_logging;
+
 #[cfg(feature = "server")]
 use crate::validation;
 use crate::validation::ContactForm;

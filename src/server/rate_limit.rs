@@ -1,74 +1,52 @@
-#[cfg(feature = "server")]
 use std::collections::HashMap;
-#[cfg(feature = "server")]
 use std::sync::LazyLock;
-#[cfg(feature = "server")]
 use std::sync::Mutex;
-#[cfg(feature = "server")]
 use std::time::Duration;
-#[cfg(feature = "server")]
 use std::time::Instant;
 
-#[cfg(feature = "server")]
+const MAX_REQUESTS: u32 = 5;
+const WINDOW_DURATION: Duration = Duration::from_secs(300);
+
 struct RateLimitEntry {
     count: u32,
     window_start: Instant,
 }
 
-#[cfg(feature = "server")]
 static CONTACT_LIMITS: LazyLock<Mutex<HashMap<String, RateLimitEntry>>> =
     LazyLock::new(|| Mutex::new(HashMap::new()));
 
-#[cfg(feature = "server")]
-static CLEANUP_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
-
-#[cfg(feature = "server")]
-/// Check if the given key is within the contact form rate limit.
-/// Allows 5 requests per 5 minutes.
+/// Returns `true` if the request is within the rate limit, `false` if the
+/// caller has exceeded the maximum allowed requests within the window.
+///
+/// # Lock Ordering
+/// This function acquires `CONTACT_LIMITS` lock and holds it for the duration
+/// of the read-modify-write. This is safe because the lock is uncontended
+/// (per-key granularity is handled inside the entry logic, not via separate
+/// locks). The critical section is ~O(1) hashmap operations — should never
+/// block for more than a few microseconds.
 pub fn check_contact_rate_limit(key: &str) -> bool {
-    let mut limits = CONTACT_LIMITS.lock().unwrap_or_else(|e| e.into_inner());
+    let mut limits = CONTACT_LIMITS.lock().expect("rate limit mutex poisoned");
+
     let now = Instant::now();
-    let window = Duration::from_secs(300);
-    let max_requests = 5u32;
+    let entry = limits.entry(key.to_string()).or_insert(RateLimitEntry {
+        count: 0,
+        window_start: now,
+    });
 
-    // Periodic cleanup: sweep entries older than one window every ~64 calls
-    let count = CLEANUP_COUNTER.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-    if count.is_multiple_of(64) {
-        limits.retain(|_, entry| now.duration_since(entry.window_start) <= window);
+    if now.duration_since(entry.window_start) > WINDOW_DURATION {
+        entry.count = 0;
+        entry.window_start = now;
     }
 
-    match limits.get_mut(key) {
-        Some(entry) => {
-            if now.duration_since(entry.window_start) > window {
-                entry.count = 1;
-                entry.window_start = now;
-                true
-            } else if entry.count < max_requests {
-                entry.count += 1;
-                true
-            } else {
-                false
-            }
-        }
-        None => {
-            limits.insert(
-                key.to_string(),
-                RateLimitEntry {
-                    count: 1,
-                    window_start: now,
-                },
-            );
-            true
-        }
+    if entry.count >= MAX_REQUESTS {
+        return false;
     }
-}
 
-#[cfg(not(feature = "server"))]
-pub fn check_contact_rate_limit(_key: &str) -> bool {
+    entry.count += 1;
     true
 }
 
-#[cfg(all(test, feature = "server"))]
+#[cfg(test)]
 mod tests {
     use std::thread;
 

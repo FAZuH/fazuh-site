@@ -5,7 +5,7 @@ use tracing_subscriber::Layer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
-use crate::config::Config;
+use super::config::Config;
 
 pub fn init_logging() {
     let config = Config::get();
