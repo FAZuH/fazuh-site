@@ -1373,7 +1373,7 @@ checksum = "9f1f227452a390804cdb637b74a86990f2a7d7ba4b7d5693aac9b4dd6defd8d6"
 
 [[package]]
 name = "fazuh-site"
-version = "0.1.6"
+version = "0.1.7"
 dependencies = [
  "dioxus",
  "dotenvy",
@@ -1382,8 +1382,8 @@ dependencies = [
 
 [[package]]
 name = "fazuh-utils"
-version = "0.1.0"
-source = "git+https://github.com/FAZuH/site-utils.git?tag=v0.1.0#36f079ab742a2ab061e8c1893f85bd2a5e85eea7"
+version = "0.1.1"
+source = "git+https://github.com/FAZuH/site-utils.git?tag=v0.1.1#6f915d54d0cd330575b5e5affd363897c70e8815"
 dependencies = [
  "dioxus",
  "dotenvy",
