@@ -24,21 +24,10 @@ new_without_default = "allow"
 
 [dependencies]
 dioxus = { version = "0.7", features = ["fullstack"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-tracing = "0.1"
-validator = { version = "0.20", features = ["derive"] }
-http = "1"
+fazuh-utils = { git = "https://github.com/FAZuH/site-utils.git", tag = "v0.1.0", features = ["contact", "embed"] }
 
 # Server-only dependencies
 dotenvy = { version = "0.15", optional = true }
-lettre = { version = "0.11", default-features = false, features = ["smtp-transport", "tokio1-rustls-tls", "builder"], optional = true }
-tokio = { version = "1", features = ["rt-multi-thread"], optional = true }
-tracing-subscriber = { version = "0.3", features = ["env-filter"], optional = true }
-tracing-appender = { version = "0.2", optional = true }
-
-[dev-dependencies]
-serial_test = "3"
 
 [features]
 default = []
@@ -46,8 +35,5 @@ web = ["dioxus/web"]
 server = [
     "dioxus/server",
     "dep:dotenvy",
-    "dep:lettre",
-    "dep:tokio",
-    "dep:tracing-subscriber",
-    "dep:tracing-appender",
+    "fazuh-utils/smtp",
 ]

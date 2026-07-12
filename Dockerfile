@@ -16,7 +16,7 @@ RUN curl -fsSL --retry 3 --retry-delay 2 \
 # Install Dioxus CLI
 RUN rustup target add wasm32-unknown-unknown && \
     curl -fsSL --retry 3 --retry-delay 2 \
-    https://github.com/DioxusLabs/dioxus/releases/download/v0.7.6/dx-x86_64-unknown-linux-gnu.tar.gz \
+    https://github.com/DioxusLabs/dioxus/releases/download/v0.7.9/dx-x86_64-unknown-linux-gnu.tar.gz \
     -o /tmp/dx.tar.gz && \
     tar -xzf /tmp/dx.tar.gz -C /usr/local/bin dx && \
     chmod +x /usr/local/bin/dx && \
@@ -28,17 +28,9 @@ WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
 RUN --mount=type=cache,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,target=/usr/local/cargo/git,sharing=locked \
-    mkdir -p src/components src/utils src/bin && \
+    mkdir -p src/bin && \
     echo "fn main() {}" > src/main.rs && \
-    echo "" > src/app.rs && \
-    echo "" > src/server.rs && \
-    echo "" > src/utils.rs && \
-    echo "" > src/components/mod.rs && \
-    echo "" > src/utils/config.rs && \
-    echo "" > src/utils/logging.rs && \
-    echo "" > src/utils/rate_limit.rs && \
-    echo "" > src/utils/validation.rs && \
-    echo "" > src/utils/smtp.rs && \
+    echo "fn main() {}" > src/bin/fetch_stats.rs && \
     cargo build --release 2>/dev/null || true && \
     rm -rf src
 

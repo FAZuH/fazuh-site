@@ -18,7 +18,7 @@ jobs:
     name: Release
     uses: ./.github/workflows/_release.yml
     with:
-      binary-name: fazuh-site
+      binary-name: ${{ github.event.repository.name }}
       platforms: linux
       build-binaries: false
     secrets: inherit
@@ -42,9 +42,9 @@ jobs:
         id: meta
         run: |
           echo "tags<<EOF" >> $GITHUB_OUTPUT
-          echo "ghcr.io/${{ steps.repo.outputs.owner }}/fazuh-site:latest" >> $GITHUB_OUTPUT
+          echo "ghcr.io/${{ steps.repo.outputs.owner }}/${{ github.event.repository.name }}:latest" >> $GITHUB_OUTPUT
           if [ -n "${{ needs.release.outputs.tag }}" ]; then
-            echo "ghcr.io/${{ steps.repo.outputs.owner }}/fazuh-site:${{ needs.release.outputs.tag }}" >> $GITHUB_OUTPUT
+            echo "ghcr.io/${{ steps.repo.outputs.owner }}/${{ github.event.repository.name }}:${{ needs.release.outputs.tag }}" >> $GITHUB_OUTPUT
           fi
           echo "EOF" >> $GITHUB_OUTPUT
       - name: Build and push Docker image

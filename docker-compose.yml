@@ -3,6 +3,7 @@ name: fazuh-site
 services:
   app:
     image: ghcr.io/fazuh/fazuh-site:latest
+    build: .
     ports:
       - ${HTTP_BIND:-127.0.0.1:8080}:8080
     environment:

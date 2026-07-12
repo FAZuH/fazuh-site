@@ -4,18 +4,22 @@ on:
   workflow_call:
     inputs:
       cargo-build-args:
+        description: 'Arguments to pass to cargo build'
         required: false
         type: string
         default: ''
       upload-binary:
+        description: 'Whether to upload the binary artifact'
         required: false
         type: boolean
         default: false
       release:
+        description: 'Whether this is a release build (affects artifact path)'
         required: false
         type: boolean
         default: false
       require-patched-cargo:
+        description: 'Fail if patched Cargo.toml artifact is not found'
         required: false
         type: boolean
         default: false
@@ -40,7 +44,7 @@ jobs:
       - name: Build Tailwind CSS
         run: tailwindcss -i input.css -o assets/tailwind.css
       - name: Install Dioxus CLI
-        run: cargo install dioxus-cli --locked
+        run: cargo install dioxus-cli --version 0.7.9 --locked
       - name: Cargo check
         run: cargo check --all-features
       - name: Clippy
