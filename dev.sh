@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Development helper script for fazuh-site
+# Development helper script
 # Usage: ./dev.sh [command1] [command2] ...
 #   commands: format | lint | test | build | all | help
 #   Multiple commands can be specified and will execute left to right
@@ -34,7 +34,7 @@ print_warning() {
 # Help function
 show_help() {
     cat << EOF
-fazuh-site Development Helper
+Development Helper Script
 
 Usage: ./dev.sh [command1] [command2] ...
 
@@ -86,6 +86,33 @@ cmd_build() {
     print_success "Release build completed"
 }
 
+cmd_docs() {
+    print_info "Compiling Mermaid diagrams..."
+    
+    # Check if mmdc (Mermaid CLI) is installed
+    if ! command -v mmdc &> /dev/null; then
+        print_warning "Mermaid CLI not found. Installing..."
+        npm install -g @mermaid-js/mermaid-cli
+    fi
+    
+    # Create output directory
+    mkdir -p docs/diagrams
+    
+    # Compile each .mmd file to PNG
+    print_info "Processing .mmd diagram files..."
+    
+    for file in docs/diagrams/*.mmd; do
+        # Check if files actually exist to avoid '*.mmd' string if no files
+        if [ -f "$file" ]; then
+            filename=$(basename "$file" .mmd)
+            print_info "Compiling $filename.mmd..."
+            mmdc -i "$file" -o "docs/diagrams/${filename}.png" -b transparent -s 4 --width 3840 --height 2160
+        fi
+    done
+    
+    print_success "Mermaid diagrams compiled to docs/diagrams/"
+}
+
 cmd_dev() {
     print_info "Starting dev server..."
     # tailwind calls watchman, which if not installed returns 127, and cascades under `set -e`
@@ -122,6 +149,9 @@ execute_command() {
             ;;
         build)
             cmd_build
+            ;;
+        docs)
+            cmd_docs
             ;;
         dev)
             cmd_dev

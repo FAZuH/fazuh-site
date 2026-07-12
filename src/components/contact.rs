@@ -1,8 +1,7 @@
 use dioxus::prelude::*;
-
-use crate::server::ContactResponse;
-use crate::server::submit_contact;
-use crate::validation::ContactForm;
+use fazuh_utils::contact::ContactForm;
+use fazuh_utils::contact::ContactResponse;
+use fazuh_utils::contact::submit_contact;
 
 #[component]
 pub fn Contact() -> Element {
@@ -20,6 +19,7 @@ pub fn Contact() -> Element {
         let form = ContactForm {
             name: name(),
             email: email(),
+            subject: None,
             message: message(),
         };
 
