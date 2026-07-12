@@ -24,7 +24,7 @@ new_without_default = "allow"
 
 [dependencies]
 dioxus = { version = "0.7", features = ["fullstack"] }
-fazuh-utils = { git = "https://github.com/FAZuH/site-utils.git", features = ["contact"] }
+fazuh-utils = { git = "https://github.com/FAZuH/site-utils.git", features = ["contact", "embed"] }
 
 # Server-only dependencies
 dotenvy = { version = "0.15", optional = true }

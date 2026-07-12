@@ -1,4 +1,5 @@
 use dioxus::prelude::*;
+use fazuh_utils::embed::HeadEmbed;
 
 static TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 static FAVICON: Asset = asset!("/assets/profile.jpg");
@@ -61,6 +62,12 @@ pub fn Head() -> Element {
               font-display: swap;
             }}
             "
+        }
+        HeadEmbed {
+            title: "FAZuH",
+            description: "Cloud Infrastructure Engineer \u{00b7} Software Developer \u{00b7} Statistics Student",
+            url: "https://fazuh.com",
+            image: "https://fazuh.com/assets/profile.jpg",
         }
     }
 }
