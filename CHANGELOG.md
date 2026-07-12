@@ -1,3 +1,5 @@
+## 0.1.6 (2026-07-12)
+
 ## 0.1.5 (2026-07-10)
 
 
@@ -33,6 +35,4 @@
 
 * Mutex poisoning and prevent unbounded memory growth ([2506604](https://github.com/FAZuH/fazuh-site/commit/25066043faedd5ada6343cbb8270bbd416acedae))
 * Panic on invalid reply-to address ([161f1d9](https://github.com/FAZuH/fazuh-site/commit/161f1d90b56176566f028e2b8fbfd2316aacc506))
-
-## 0.1.1 (2026-07-09)
 
