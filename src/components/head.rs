@@ -67,7 +67,7 @@ pub fn Head() -> Element {
             title: "FAZuH",
             description: "Cloud Infrastructure Engineer \u{00b7} Software Developer \u{00b7} Statistics Student",
             url: "https://fazuh.com",
-            image: "https://fazuh.com/assets/profile.jpg",
+            image: format!("https://fazuh.com{FAVICON}"),
         }
     }
 }
