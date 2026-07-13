@@ -62,6 +62,7 @@ macro_rules! tool {
 static LANGS: LazyLock<Vec<Lang>> = LazyLock::new(|| vec![
     lang!("Rust", "https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white", [
         fw!("Poise", "Discord bot"),
+        fw!("Dioxus", "Fullstack websites"),
         fw!("ratatui", "TUI"),
         fw!("Diesel", "ORM"),
         fw!("sqlx", "SQLite"),
