@@ -69,7 +69,7 @@ pub fn Projects() -> Element {
                 div {
                     class: "border-t border-hairline pt-6 flex flex-col",
                     Collapsible {
-                        label: "notable/",
+                        label: "notable-projects/",
                         default_open: true,
                         always_open: true,
                         children: rsx! {
@@ -94,7 +94,7 @@ pub fn Projects() -> Element {
                         }
                     }
                     Collapsible {
-                        label: "course-work/",
+                        label: "college-projects/",
                         default_open: false,
                         children: rsx! {
                             div { class: "pl-3",
