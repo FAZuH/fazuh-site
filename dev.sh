@@ -2,7 +2,7 @@
 
 # Development helper script
 # Usage: ./dev.sh [command1] [command2] ...
-#   commands: format | lint | test | build | dev | docs | mail | mail-dump | mail-send | mail-clear | mail-stop | all | help
+#   commands: format | lint | test | build | dev [port] | docs | mail | mail-dump | mail-send | mail-clear | mail-stop | all | help
 #   Multiple commands can be specified and will execute left to right
 
 set -e
@@ -47,7 +47,7 @@ Commands:
   lint      - Run linter with "cargo clippy --all-targets --all-features --no-deps --fix --allow-dirty"
   test      - Run tests with "cargo test --all-features --no-fail-fast"
   build     - Build release with "tailwindcss + dx build --release"
-  dev       - Run "dx serve --port 8080"
+  dev [port] - Run "dx serve --port <port>" (default: 8080)
   docs      - Compile Mermaid diagrams to images
   mail      - Start Mailpit dev mail server (SMTP + IMAP + Web UI)
   mail-dump - Dump all captured messages from Mailpit
@@ -64,6 +64,8 @@ Examples:
   ./dev.sh lint                    # Run linter
   ./dev.sh test                    # Run tests
   ./dev.sh build                   # Build release
+  ./dev.sh dev                     # Dev server on port 8080
+  ./dev.sh dev 8081                # Dev server on port 8081
   ./dev.sh mail                    # Start dev mail server
   ./dev.sh mail mail-dump          # Start server then dump messages
   ./dev.sh format lint             # Format then lint
@@ -125,12 +127,13 @@ cmd_docs() {
 }
 
 cmd_dev() {
-    print_info "Starting dev server..."
+    local port="${1:-8080}"
+    print_info "Starting dev server on port ${port}..."
     set -em
     tailwindcss -i input.css -o assets/tailwind.css --watch &>/dev/null &
     TAILWIND_PID=$!
     trap "kill $TAILWIND_PID 2>/dev/null" EXIT
-    dx serve --port 8080
+    dx serve --port "${port}"
     print_success "Dev server stopped"
 }
 
@@ -331,6 +334,20 @@ if [ $# -eq 0 ]; then
     exit 0
 fi
 
-for command in "$@"; do
-    execute_command "$command"
+while [ $# -gt 0 ]; do
+    case "$1" in
+        dev)
+            shift
+            if [ $# -gt 0 ] && [[ "$1" =~ ^[0-9]+$ ]]; then
+                cmd_dev "$1"
+                shift
+            else
+                cmd_dev
+            fi
+            ;;
+        *)
+            execute_command "$1"
+            shift
+            ;;
+    esac
 done
