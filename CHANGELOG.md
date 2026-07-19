@@ -1,3 +1,12 @@
+## 0.1.8 (2026-07-19)
+
+
+### Bug Fixes
+
+* Add per-field inline error display for all form fields ([d4ec7de](https://github.com/FAZuH/fazuh-site/commit/d4ec7de31a1403413e90653fd16c33ff4cf08c5d))
+* Crash on .env parse error instead of silently continuing ([0d40fc7](https://github.com/FAZuH/fazuh-site/commit/0d40fc71ed5c0903568ff9d9e93ef8ebf67b137e))
+* Quote SMTP_FROM in .env-example to prevent dotenvy parse error ([232a785](https://github.com/FAZuH/fazuh-site/commit/232a78553d9190e0830119d8e0ce845e8b6cbd44))
+
 ## 0.1.7 (2026-07-12)
 
 
@@ -15,18 +24,4 @@
 * Fix project linking to incorrect url ([dac1b2e](https://github.com/FAZuH/fazuh-site/commit/dac1b2eec09cea1d189e10c6bd9aacaefa96138e))
 
 ## 0.1.4 (2026-07-10)
-
-## 0.1.3 (2026-07-10)
-
-
-### New Features
-
-* Full mobile responsive pass ([2b28b1a](https://github.com/FAZuH/fazuh-site/commit/2b28b1a9998151fde53b05a2718cdc258b0f5b80))
-* Update cloud infra skills ([4c60b9e](https://github.com/FAZuH/fazuh-site/commit/4c60b9e1147e9d503b164cdf00dbbe60f391a055))
-
-
-### Build System
-
-* Improve build speed ([acac9b3](https://github.com/FAZuH/fazuh-site/commit/acac9b3f29fe975d2feb7ce4af4dbcacda099140))
-* Make Docker image run as a non-root user ([750b589](https://github.com/FAZuH/fazuh-site/commit/750b5895e1ed0f05601b57f7b7428334bd479fcd))
 
