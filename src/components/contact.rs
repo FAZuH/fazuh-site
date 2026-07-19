@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use fazuh_utils::contact::ContactForm;
 use fazuh_utils::contact::ContactResponse;
 use fazuh_utils::contact::submit_contact;
+use fazuh_utils::validation;
 
 #[component]
 pub fn Contact() -> Element {
@@ -16,38 +17,47 @@ pub fn Contact() -> Element {
         is_pending.set(true);
         response.set(None);
 
-        let form = ContactForm {
-            name: name(),
-            email: email(),
-            subject: None,
-            message: message(),
-        };
-
-        spawn(async move {
-            match submit_contact(form).await {
-                Ok(resp) => {
-                    is_pending.set(false);
-                    if resp.success {
-                        name.set(String::new());
-                        email.set(String::new());
-                        message.set(String::new());
+        match ContactForm::builder(name())
+            .email(email())
+            .message(message())
+            .build()
+        {
+            Ok(form) => {
+                spawn(async move {
+                    match submit_contact(form).await {
+                        Ok(resp) => {
+                            is_pending.set(false);
+                            if resp.success {
+                                name.set(String::new());
+                                email.set(String::new());
+                                message.set(String::new());
+                            }
+                            response.set(Some(resp));
+                        }
+                        Err(err) => {
+                            is_pending.set(false);
+                            let error_msg = match &err {
+                                ServerFnError::Request(e) => format!("Network error: {e}"),
+                                _ => format!("Server error: {err}"),
+                            };
+                            response.set(Some(ContactResponse {
+                                success: false,
+                                message: error_msg,
+                                errors: None,
+                            }));
+                        }
                     }
-                    response.set(Some(resp));
-                }
-                Err(err) => {
-                    is_pending.set(false);
-                    let error_msg = match &err {
-                        ServerFnError::Request(e) => format!("Network error: {e}"),
-                        _ => format!("Server error: {err}"),
-                    };
-                    response.set(Some(ContactResponse {
-                        success: false,
-                        message: error_msg,
-                        errors: None,
-                    }));
-                }
+                });
             }
-        });
+            Err(errors) => {
+                is_pending.set(false);
+                response.set(Some(ContactResponse {
+                    success: false,
+                    message: "Please fix the form errors and try again.".to_string(),
+                    errors: Some(validation::format_errors(&errors)),
+                }));
+            }
+        }
     };
 
     rsx! {
