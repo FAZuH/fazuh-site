@@ -1382,8 +1382,8 @@ dependencies = [
 
 [[package]]
 name = "fazuh-utils"
-version = "0.1.2"
-source = "git+https://github.com/FAZuH/site-utils.git?tag=v0.1.2#a47e5cbe4849f5bcda0500fb21dd36bd52b4a45a"
+version = "0.1.4"
+source = "git+https://github.com/FAZuH/site-utils.git?tag=v0.1.4#1cc43f6935de162abd04d5420b9ec5ca3beabad6"
 dependencies = [
  "dioxus",
  "dotenvy",

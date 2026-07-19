@@ -198,7 +198,8 @@ cmd_mail_dump() {
     json=$(curl -s http://localhost:8025/api/v1/messages)
 
     python3 -c "
-import json, sys
+import json, sys, urllib.request
+
 data = json.load(sys.stdin)
 msgs = data.get('messages', [])
 if not msgs:
@@ -220,10 +221,20 @@ for m in msgs:
     print(f'  Date:    {m.get(\"Created\", \"\")}')
     print(f'  Size:    {m.get(\"Size\", 0)} bytes')
     print()
-    snippet = m.get('Snippet', '') or ''
-    if snippet.strip():
-        for line in snippet.strip().splitlines():
-            print(f'  {line}')
+    # Fetch full message details for the text body (preserves newlines)
+    detail_url = f'http://localhost:8025/api/v1/message/{m[\"ID\"]}'
+    try:
+        req = urllib.request.Request(detail_url)
+        with urllib.request.urlopen(req) as resp:
+            detail = json.loads(resp.read())
+        text = detail.get('Text', '') or ''
+        if text.strip():
+            for line in text.splitlines():
+                print(f'  {line}')
+        else:
+            print('  (no text body)')
+    except Exception:
+        print('  (could not fetch body)')
     print()
 " <<< "$json"
 }
