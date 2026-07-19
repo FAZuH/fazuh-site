@@ -194,35 +194,38 @@ cmd_mail_dump() {
         exit 1
     fi
 
-    local msgs
-    msgs=$(curl -s http://localhost:8025/api/v1/messages)
+    local json
+    json=$(curl -s http://localhost:8025/api/v1/messages)
 
-    local count
-    count=$(echo "$msgs" | python3 -c "import json,sys; print(len(json.load(sys.stdin)))" 2>/dev/null)
-
-    if [ "$count" = "0" ]; then
-        print_info "No messages."
-        return
-    fi
-
-    print_info "${count} message(s):"
-    echo "$msgs" | python3 -c "
+    python3 -c "
 import json, sys
-msgs = json.load(sys.stdin)
+data = json.load(sys.stdin)
+msgs = data.get('messages', [])
+if not msgs:
+    print('No messages.')
+    sys.exit(0)
+print(f'{len(msgs)} message(s):')
 for m in msgs:
-    print('═' * 60)
+    sender = m.get('From', {})
+    from_str = sender.get('Address', '?')
+    if sender.get('Name'):
+        from_str = f'{sender[\"Name\"]} <{from_str}>'
+    to_list = m.get('To', [])
+    to_str = ', '.join(t.get('Address', '?') for t in to_list)
+    print('=' * 60)
     print(f'  ID:      {m[\"ID\"]}')
-    print(f'  From:    {m[\"From\"]}')
-    print(f'  To:      {\", \".join(m.get(\"To\", []))}')
-    print(f'  Subject: {m[\"Subject\"]}')
+    print(f'  From:    {from_str}')
+    print(f'  To:      {to_str}')
+    print(f'  Subject: {m.get(\"Subject\", \"(no subject)\")}')
     print(f'  Date:    {m.get(\"Created\", \"\")}')
     print(f'  Size:    {m.get(\"Size\", 0)} bytes')
     print()
-    snippet = m.get('Snippet', '')
-    if snippet:
-        print(f'  {snippet}')
+    snippet = m.get('Snippet', '') or ''
+    if snippet.strip():
+        for line in snippet.strip().splitlines():
+            print(f'  {line}')
     print()
-"
+" <<< "$json"
 }
 
 cmd_mail_send() {
