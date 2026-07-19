@@ -93,6 +93,7 @@ pub fn Contact() -> Element {
 
                     form {
                         onsubmit: on_submit,
+                        novalidate: true,
                         class: "flex flex-col gap-5",
                         FieldInput {
                             label: "Name",
@@ -100,6 +101,7 @@ pub fn Contact() -> Element {
                             placeholder: "Your name",
                             value: name(),
                             oninput: move |evt: FormEvent| name.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("name").cloned()).unwrap_or_default(),
                         }
                         FieldInput {
                             label: "Email",
@@ -107,12 +109,14 @@ pub fn Contact() -> Element {
                             placeholder: "you@example.com",
                             value: email(),
                             oninput: move |evt: FormEvent| email.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("email").cloned()).unwrap_or_default(),
                         }
                         FieldTextarea {
                             label: "Message",
                             placeholder: "Your message",
                             value: message(),
                             oninput: move |evt: FormEvent| message.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("message").cloned()).unwrap_or_default(),
                         }
                         button {
                             class: "w-full sm:w-auto px-5 py-2 text-sm font-medium bg-ink text-canvas rounded-sm \
@@ -159,6 +163,7 @@ fn FieldInput(
     placeholder: &'static str,
     value: String,
     oninput: EventHandler<FormEvent>,
+    errors: Vec<String>,
 ) -> Element {
     rsx! {
         div {
@@ -178,6 +183,9 @@ fn FieldInput(
                 value,
                 oninput,
             }
+            {errors.first().map(|e| rsx! {
+                p { class: "text-xs text-red-600 mt-1", "{e}" }
+            })}
         }
     }
 }
@@ -188,6 +196,7 @@ fn FieldTextarea(
     placeholder: &'static str,
     value: String,
     oninput: EventHandler<FormEvent>,
+    errors: Vec<String>,
 ) -> Element {
     rsx! {
         div {
@@ -206,6 +215,9 @@ fn FieldTextarea(
                 value,
                 oninput,
             }
+            {errors.first().map(|e| rsx! {
+                p { class: "text-xs text-danger mt-1", "{e}" }
+            })}
         }
     }
 }
