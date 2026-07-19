@@ -2,6 +2,7 @@ use dioxus::prelude::*;
 use fazuh_utils::contact::ContactForm;
 use fazuh_utils::contact::ContactResponse;
 use fazuh_utils::contact::submit_contact;
+use fazuh_utils::validation;
 
 #[component]
 pub fn Contact() -> Element {
@@ -16,38 +17,47 @@ pub fn Contact() -> Element {
         is_pending.set(true);
         response.set(None);
 
-        let form = ContactForm {
-            name: name(),
-            email: email(),
-            subject: None,
-            message: message(),
-        };
-
-        spawn(async move {
-            match submit_contact(form).await {
-                Ok(resp) => {
-                    is_pending.set(false);
-                    if resp.success {
-                        name.set(String::new());
-                        email.set(String::new());
-                        message.set(String::new());
+        match ContactForm::builder(name())
+            .email(email())
+            .message(message())
+            .build()
+        {
+            Ok(form) => {
+                spawn(async move {
+                    match submit_contact(form).await {
+                        Ok(resp) => {
+                            is_pending.set(false);
+                            if resp.success {
+                                name.set(String::new());
+                                email.set(String::new());
+                                message.set(String::new());
+                            }
+                            response.set(Some(resp));
+                        }
+                        Err(err) => {
+                            is_pending.set(false);
+                            let error_msg = match &err {
+                                ServerFnError::Request(e) => format!("Network error: {e}"),
+                                _ => format!("Server error: {err}"),
+                            };
+                            response.set(Some(ContactResponse {
+                                success: false,
+                                message: error_msg,
+                                errors: None,
+                            }));
+                        }
                     }
-                    response.set(Some(resp));
-                }
-                Err(err) => {
-                    is_pending.set(false);
-                    let error_msg = match &err {
-                        ServerFnError::Request(e) => format!("Network error: {e}"),
-                        _ => format!("Server error: {err}"),
-                    };
-                    response.set(Some(ContactResponse {
-                        success: false,
-                        message: error_msg,
-                        errors: None,
-                    }));
-                }
+                });
             }
-        });
+            Err(errors) => {
+                is_pending.set(false);
+                response.set(Some(ContactResponse {
+                    success: false,
+                    message: "Please fix the form errors and try again.".to_string(),
+                    errors: Some(validation::format_errors(&errors)),
+                }));
+            }
+        }
     };
 
     rsx! {
@@ -83,6 +93,7 @@ pub fn Contact() -> Element {
 
                     form {
                         onsubmit: on_submit,
+                        novalidate: true,
                         class: "flex flex-col gap-5",
                         FieldInput {
                             label: "Name",
@@ -90,6 +101,7 @@ pub fn Contact() -> Element {
                             placeholder: "Your name",
                             value: name(),
                             oninput: move |evt: FormEvent| name.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("name").cloned()).unwrap_or_default(),
                         }
                         FieldInput {
                             label: "Email",
@@ -97,12 +109,14 @@ pub fn Contact() -> Element {
                             placeholder: "you@example.com",
                             value: email(),
                             oninput: move |evt: FormEvent| email.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("email").cloned()).unwrap_or_default(),
                         }
                         FieldTextarea {
                             label: "Message",
                             placeholder: "Your message",
                             value: message(),
                             oninput: move |evt: FormEvent| message.set(evt.value()),
+                            errors: response.read().as_ref().and_then(|r| r.errors.as_ref()).and_then(|e| e.get("message").cloned()).unwrap_or_default(),
                         }
                         button {
                             class: "w-full sm:w-auto px-5 py-2 text-sm font-medium bg-ink text-canvas rounded-sm \
@@ -149,6 +163,7 @@ fn FieldInput(
     placeholder: &'static str,
     value: String,
     oninput: EventHandler<FormEvent>,
+    errors: Vec<String>,
 ) -> Element {
     rsx! {
         div {
@@ -168,6 +183,9 @@ fn FieldInput(
                 value,
                 oninput,
             }
+            {errors.first().map(|e| rsx! {
+                p { class: "text-xs text-red-600 mt-1", "{e}" }
+            })}
         }
     }
 }
@@ -178,6 +196,7 @@ fn FieldTextarea(
     placeholder: &'static str,
     value: String,
     oninput: EventHandler<FormEvent>,
+    errors: Vec<String>,
 ) -> Element {
     rsx! {
         div {
@@ -196,6 +215,9 @@ fn FieldTextarea(
                 value,
                 oninput,
             }
+            {errors.first().map(|e| rsx! {
+                p { class: "text-xs text-danger mt-1", "{e}" }
+            })}
         }
     }
 }

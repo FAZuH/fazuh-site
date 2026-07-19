@@ -44,8 +44,10 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 - **type** — `feat`, `fix`, `perf`, `docs`, `refactor`, `test`, `ci`, `chore`,
   `style`, `build`, `revert`
 - **scope** — optional; reflects the area of the codebase being changed
-- **subject** — capitalize the first letter; it appears verbatim in the
-  changelog (unless we override the changelog).
+- **subject** — capitalize the first letter ONLY when the commit is tagged
+  `[pub]` AND there is no `changelog:` body override (the subject appears
+  verbatim in the changelog for end users). Otherwise — non-`[pub]` commits
+  or commits with a `changelog:` override — use lowercase.
 
 ```
 feat(config): Add support for YAML config files [pub]
