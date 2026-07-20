@@ -1,8 +1,5 @@
 use dioxus::prelude::*;
 
-use crate::server_stats::CONTAINER_COUNT;
-use crate::server_stats::SERVER_COUNT;
-
 #[component]
 pub fn About() -> Element {
     rsx! {
@@ -23,7 +20,7 @@ pub fn About() -> Element {
                             class: "flex flex-col gap-3 text-base",
                             BulletItem {
                                 label: "Cloud Infrastructure Engineer",
-                                desc: format!("Managing {SERVER_COUNT} servers and ~{CONTAINER_COUNT} Docker containers with Ansible, Terraform, Consul, and custom tooling."),
+                                desc: "Solo infrastructure engineer serving 3 organizations — running production mail, SSO, observability, monitoring, and security with infrastructure-as-code, containerized deployment, and automated backups.",
                             }
                             BulletItem {
                                 label: "Software Developer",
