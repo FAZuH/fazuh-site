@@ -2,6 +2,6 @@
 //! Source: live SSH query of ~/Projects/faz-lab/nodes/ + local compose count
 //! Do not edit by hand — regenerate via the fetch_stats binary.
 
-pub const SERVER_COUNT: u32 = 4;
-pub const CONTAINER_COUNT: u32 = 99;
-pub const STACK_COUNT: u32 = 26;
+pub const SERVER_COUNT: u32 = 5;
+pub const CONTAINER_COUNT: u32 = 125;
+pub const STACK_COUNT: u32 = 29;
