@@ -25,11 +25,12 @@ macro_rules! proj {
 static NOTABLE: LazyLock<Vec<Project>> = LazyLock::new(|| vec![
     proj!("pwr-bot", "Discord bot \u{2014} anime & manga tracking, voice call stats", "https://github.com/FAZuH/pwr-bot"),
     proj!("notes.fazuh.com", "My Obsidian notes built with Quartz", "https://notes.fazuh.com"),
-    proj!("mail.fazuh.com", "Mail server for @fazuh.com emails (Mailcow)", "https://mail.fazuh.com"),
+    proj!("mail.fazuh.com", "Mail server for @fazuh.com emails", "https://mail.fazuh.com"),
     proj!("tomo", "TUI-based Pomodoro timer", "https://github.com/FAZuH/tomo"),
     proj!("lab-ops", "Utility tools for my homelab", "https://github.com/FAZuH/lab-ops"),
-    proj!("arthaenergi.id", "Landing page (Dioxus) and mail server (Mailcow) for PT. Mandala Artha Energi", "https://arthaenergi.id"),
-    proj!("krosanevasi.com", "Landing page (Dioxus) and mail server (Mailcow) for PT. Kros Anevasi", "https://krosanevasi.com"),
+    proj!("bimbel-bci.com", "Landing page and mail server for Bintang Cemerlang Insani", "https://bimbel-bci.com"),
+    proj!("arthaenergi.id", "Landing page and mail server for PT. Mandala Artha Energi", "https://arthaenergi.id"),
+    proj!("krosanevasi.com", "Landing page and mail server for PT. Kros Anevasi", "https://krosanevasi.com"),
 ]);
 
 #[rustfmt::skip]
