@@ -1,3 +1,16 @@
+## 0.1.9 (2026-07-20)
+
+
+### New Features
+
+* Add bimbel-bci.com to project list ([94c64f5](https://github.com/FAZuH/fazuh-site/commit/94c64f5095cbdeefb83c0df9f84bc18751b4627a))
+* Update "Cloud Infrastructure Engineer" description in about ([2f4e3b8](https://github.com/FAZuH/fazuh-site/commit/2f4e3b897627a3b5dbaf42187252fc21a802ece5))
+
+
+### Miscellaneous Chores
+
+* Update server stats ([7818b16](https://github.com/FAZuH/fazuh-site/commit/7818b16e7bd383173308a8ae3fb014b3da370511))
+
 ## 0.1.8 (2026-07-19)
 
 
@@ -22,6 +35,4 @@
 ### Bug Fixes
 
 * Fix project linking to incorrect url ([dac1b2e](https://github.com/FAZuH/fazuh-site/commit/dac1b2eec09cea1d189e10c6bd9aacaefa96138e))
-
-## 0.1.4 (2026-07-10)
 
